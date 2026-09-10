@@ -7,6 +7,7 @@ import (
 type Model struct {
 	width  int
 	height int
+	selected int
 }
 
 func (model Model) Init() tea.Cmd {
