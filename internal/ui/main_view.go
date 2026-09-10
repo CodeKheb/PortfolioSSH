@@ -2,7 +2,6 @@ package ui
 
 import "github.com/charmbracelet/lipgloss"
 
-
 func (model Model) MainView() string {
 	main := MainStyle.
 		Width(model.width - 4).
