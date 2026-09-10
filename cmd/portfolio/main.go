@@ -7,6 +7,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+// Main program
+// starts the lipgloss UI
 func main() {
 	program := tea.NewProgram(ui.Model{}, tea.WithAltScreen())
 	if _, err := program.Run()

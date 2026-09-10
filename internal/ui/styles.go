@@ -5,9 +5,24 @@ import (
 )
 
 var (
-	MainStyle = lipgloss.NewStyle().
-		Border(lipgloss.RoundedBorder()).
-		BorderForeground(lipgloss.Color("#666666")).
-		Padding(10, 10).
-		Bold(true)
+    appStyle = lipgloss.NewStyle().
+        Padding(1, 2)
+
+    titleStyle = lipgloss.NewStyle().
+        Bold(true).
+        Foreground(lipgloss.Color("#FFFDF5")).
+        Background(lipgloss.Color("#7D56F4")).
+        Padding(0, 1)
+
+    itemStyle = lipgloss.NewStyle().
+        PaddingLeft(2)
+
+    selectedItemStyle = lipgloss.NewStyle().
+        PaddingLeft(1).
+        Bold(true).
+        Foreground(lipgloss.Color("#7D56F4"))
+
+    descriptionStyle = lipgloss.NewStyle().
+        Foreground(lipgloss.Color("#777777")).
+        PaddingLeft(4)
 )
