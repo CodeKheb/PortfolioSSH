@@ -2,7 +2,6 @@ package ui
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 )
 
 type Model struct {
@@ -19,11 +18,6 @@ func (model Model) Update(message tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (model Model) View() string {
-	main := MainStyle.
-		Width(model.width - 4).
-		Height(model.height - 4).
-		Align(lipgloss.Center, lipgloss.Center).
-		Render("Hi lol")
-	return main
+	return model.MainView()
 }
 
