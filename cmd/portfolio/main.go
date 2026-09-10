@@ -7,11 +7,6 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-type Model struct {
-	width int
-	height int
-}
-
 func main() {
 	program := tea.NewProgram(ui.Model{})
 	if _, err := program.Run()
@@ -20,8 +15,3 @@ func main() {
 		fmt.Print(err)
 	}
 }
-
-
-
-
-
