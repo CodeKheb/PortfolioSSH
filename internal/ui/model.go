@@ -5,7 +5,7 @@ import (
 )
 
 type Model struct {
-	width int
+	width  int
 	height int
 }
 
@@ -15,14 +15,18 @@ func (model Model) Init() tea.Cmd {
 
 func (model Model) Update(message tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := message.(type) {
-		case tea.KeyMsg: {
-			return model.keyHandler(msg)
-			}
-		}
+	case tea.WindowSizeMsg:
+		model.width = msg.Width
+		model.height = msg.Height
+		return model, nil
+
+	case tea.KeyMsg:
+		return model.keyHandler(msg)
+	}
+
 	return model, nil
 }
 
 func (model Model) View() string {
 	return model.MainView()
 }
-
