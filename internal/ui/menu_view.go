@@ -48,8 +48,15 @@ func (model Model) MainView() string {
 			descriptionStyle.Render(items.Description),
 		)
 
-		builder.WriteString("\n\n")
+		builder.WriteString("\n\n\n")
 	}
 
-	return appStyle.Render(builder.String())
+	builder.WriteString("\n\n")
+
+	instructions := instructionsStyle.Render(
+		"↑/↓ Navigate • Enter Select • q Quit\n\n" +
+		"Supports vim navigation  j/k	",
+	)
+
+	return appStyle.Render(builder.String() + instructions)
 }
