@@ -1,6 +1,10 @@
 package ui
 
-import "github.com/charmbracelet/lipgloss"
+import (
+	"fmt"
+
+	"github.com/charmbracelet/lipgloss"
+)
 
 var menuItems = []string {
 	"About",
@@ -26,6 +30,8 @@ func (model Model) MainView() string {
 		Width(model.width - 2).
 		Height(model.height - 3).
 		Align(lipgloss.Center, lipgloss.Center).
-		Render(view)
+		Render(fmt.Sprint(
+			"Hi lol\n\n",
+		) + view)
 	return main
 }
