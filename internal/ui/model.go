@@ -14,6 +14,12 @@ func (model Model) Init() tea.Cmd {
 }
 
 func (model Model) Update(message tea.Msg) (tea.Model, tea.Cmd) {
+	switch m := message.(type) {
+		case tea.KeyMsg:
+			if m.String() == "q" {
+				return model, tea.Quit
+			}
+		}
 	return model, nil
 }
 
