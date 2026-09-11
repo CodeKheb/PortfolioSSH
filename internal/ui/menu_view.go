@@ -54,10 +54,5 @@ func (model Model) MenuView() string {
 
 	builder.WriteString("\n\n")
 
-	instructions := instructionsStyle.Render(
-		"↑/↓ Navigate • Enter Select • q Quit\n\n" +
-			"Supports vim navigation  j/k	",
-	)
-
-	return appStyle.Render(builder.String() + instructions)
+	return model.layout(builder.String())
 }

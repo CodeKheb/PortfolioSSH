@@ -28,5 +28,6 @@ var (
 				PaddingLeft(4)
 
 	instructionsStyle = lipgloss.NewStyle().
-				Foreground(lipgloss.Color("#565F89"))
+				Foreground(lipgloss.Color("#565F89")).
+				Padding(2, 4)
 )
