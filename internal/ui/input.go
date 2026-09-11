@@ -5,18 +5,18 @@ import tea "github.com/charmbracelet/bubbletea"
 func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 	if model.screen == AboutScreen {
 		switch message.String() {
-		case "esc":
+		case "esc", "b":
 			model.screen = MenuScreen
 
 		case "q":
 			return model, tea.Quit
-
 		case "j", "down":
 			model.viewport.ScrollDown(1)
 
 		case "k", "up":
 			model.viewport.ScrollUp(1)
 		}
+
 
 		return model, nil
 	}

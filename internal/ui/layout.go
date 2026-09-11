@@ -38,7 +38,7 @@ func (model Model) layoutWithHeader(header, content string) string {
 func (model Model) footerView() string {
     return instructionsStyle.Render(
         "↑/↓ Navigate • Enter Select • q Quit\n\n" +
-            "Supports vim navigation  j/k",
+            "Supports vim navigation  j/k • b/Esc Back",
     )
 }
 

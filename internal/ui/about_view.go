@@ -257,7 +257,7 @@ func aboutContent() string {
 }
 
 func (model Model) AboutView() string {
-	header := model.headerView("ABOUT 	KHERBIN BUENAVUENTURA")
+	header := model.headerView("ABOUT 	KHERBIN BUENAVENTURA")
 
 	leftMargin := max(0, (model.width-80)/2)
 
