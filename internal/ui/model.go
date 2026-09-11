@@ -28,6 +28,8 @@ type Model struct {
 	scroll   int
 
 	viewport viewport.Model
+
+	showFooter bool
 }
 
 // Initialize tea
@@ -75,6 +77,8 @@ func ViewportModel() Model {
 	vp := viewport.New(0, 0)
 
 	return Model{
-		viewport: vp,
+		viewport:   vp,
+		showFooter: true,
 	}
 }
+

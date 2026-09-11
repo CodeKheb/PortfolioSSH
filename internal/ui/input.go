@@ -12,9 +12,15 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 			return model, tea.Quit
 		case "j", "down":
 			model.viewport.ScrollDown(1)
+		case "ctrl+d":
+			model.viewport.HalfPageDown()
 
 		case "k", "up":
 			model.viewport.ScrollUp(1)
+		case "ctrl+u":
+			model.viewport.HalfPageUp()
+		case "?":
+			model.showFooter = !model.showFooter
 		}
 
 
@@ -44,6 +50,8 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 			model.viewport.SetContent(aboutContent())
 			model.viewport.GotoTop()
 		}
+	case "?":
+		model.showFooter = !model.showFooter
 	}
 	return model, nil
 }

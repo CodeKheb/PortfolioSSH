@@ -12,10 +12,10 @@ var (
 	headerStyle = lipgloss.NewStyle().
 			Bold(true).
 			Foreground(lipgloss.Color("#1A1B26")).
-			Background(lipgloss.Color("#7AA2F7")).
+			Background(lipgloss.Color("#7D56F4")).
 			Padding(1, 2)
 
-	// About page.
+	// About page
 	nameStyle = lipgloss.NewStyle().
 			Bold(true).
 			Foreground(lipgloss.Color("#2D7DFF")).
@@ -62,4 +62,12 @@ var (
 	instructionsStyle = lipgloss.NewStyle().
 				Foreground(lipgloss.Color("#565F89")).
 				Padding(2, 4)
+
+	// Footer Style
+	keyStyle = lipgloss.NewStyle().
+			Bold(true).
+			Foreground(lipgloss.Color("#2D7DFF"))
+
+	labelStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#A9B1D6"))
 )

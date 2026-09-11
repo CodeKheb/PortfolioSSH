@@ -4,27 +4,37 @@ import "github.com/charmbracelet/lipgloss"
 
 // overall layout, gets called in different view
 func (model Model) layout(content string) string {
-    footer := model.footerView()
+	footer := model.footerView()
 
 	footerHeight := lipgloss.Height(footer)
 
-    contentHeight := model.height - footerHeight
+	contentHeight := model.height - footerHeight
 
-    body := lipgloss.NewStyle().
-        Width(model.width).
-        Height(contentHeight).
-        Padding(1, 2).
-        Render(content)
+	body := lipgloss.NewStyle().
+		Width(model.width).
+		Height(contentHeight).
+		Padding(1, 2).
+		Render(content)
 
-    return lipgloss.JoinVertical(
-        lipgloss.Left,
-        body,
-        footer,
-    )
+	return lipgloss.JoinVertical(
+		lipgloss.Left,
+		body,
+		footer,
+	)
 }
 
 func (model Model) layoutWithHeader(header, content string) string {
 	footer := model.footerView()
+
+	footerHeight := lipgloss.Height(footer)
+	headerHeight := lipgloss.Height(header)
+
+	contentHeight := model.height - headerHeight - footerHeight
+
+	content = lipgloss.NewStyle().
+		Width(model.width).
+		Height(contentHeight).
+		Render(content)
 
 	return lipgloss.JoinVertical(
 		lipgloss.Left,
@@ -36,10 +46,26 @@ func (model Model) layoutWithHeader(header, content string) string {
 
 // footer
 func (model Model) footerView() string {
-    return instructionsStyle.Render(
-        "↑/↓ Navigate • Enter Select • q Quit\n\n" +
-            "Supports vim navigation  j/k • b/Esc Back",
-    )
+	helper := ""
+
+	if model.showFooter {
+		helper =
+			labelStyle.Render("Navigate") + " " +
+				keyStyle.Render("↑/↓ j/k") + "    " +
+				labelStyle.Render("Scroll") + " " +
+				keyStyle.Render("Ctrl+D/U") + "    " +
+				labelStyle.Render("Select") + " " +
+				keyStyle.Render("Enter") + "    " +
+				labelStyle.Render("Back") + " " +
+				keyStyle.Render("b/Esc") + "    " +
+				labelStyle.Render("Quit") + " " +
+				keyStyle.Render("q") + "						"
+	}
+
+	return instructionsStyle.Render(
+		helper +
+			labelStyle.Render("? Help"),
+	)
 }
 
 func (model Model) headerView(header string) string {
