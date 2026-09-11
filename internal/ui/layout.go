@@ -66,8 +66,10 @@ func (model Model) footerView() string {
 				labelStyle.Render("Back") + " " +
 				keyStyle.Render("b/Esc") + "    " +
 				labelStyle.Render("Quit") + " " +
-				keyStyle.Render("q") + "						"
-	}
+				keyStyle.Render("q") +  "    " +
+				labelStyle.Render("Search") + " " +
+				keyStyle.Render("/ ") + "						"
+			}
 
 	return instructionsStyle.Render(
 		helper +

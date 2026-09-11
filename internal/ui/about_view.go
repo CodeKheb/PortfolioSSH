@@ -6,253 +6,189 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-func aboutContent() string {
+type AboutLine struct {
+	Text  string
+	Style lipgloss.Style
+}
+
+func (model Model) aboutLines() []AboutLine {
+	return []AboutLine{
+		// Identity
+		{"", bodyStyle},
+		{"", bodyStyle},
+		{"Kherbin Clloyde Buenaventura", nameStyle},
+		{"20 years old", mutedStyle},
+		{"Based in Bataan, Philippines", mutedStyle},
+		{"", bodyStyle},
+		{"", bodyStyle},
+
+		{"Computer Science Student @ Bataan Peninsula State University", bodyStyle},
+		{"Vice President for Externals - Student Society of Information Technology Education", bodyStyle},
+		{"", bodyStyle},
+		{"", bodyStyle},
+
+		// Introduction
+		{"This is an SSH portfolio written in the Go programming language and deployed in a Google VM.", bodyStyle},
+		{"", bodyStyle},
+
+		{`A question you might ask is "Why SSH?"`, bodyStyle},
+		{"", bodyStyle},
+
+		{"Instead of making a website portfolio and deploying it on a platform that does everything for me,", bodyStyle},
+		{"I wanted to learn how deployment works internally.", bodyStyle},
+		{"", bodyStyle},
+
+		{"Learning things like:", bodyStyle},
+		{"    • Terraform", bodyStyle},
+		{"    • Google Cloud", bodyStyle},
+		{"    • Networking", bodyStyle},
+		{"    • SSH", bodyStyle},
+		{"", bodyStyle},
+
+		{"It is also a good insight into my terminal-centric workflow.", bodyStyle},
+		{"", bodyStyle},
+
+		{"I am an aspiring DevOps engineer, and this is also why I made a terminal portfolio.", bodyStyle},
+		{"", bodyStyle},
+
+		// Education
+		{"EDUCATION", sectionStyle},
+		{"", bodyStyle},
+
+		{"Bachelor of Science in Computer Science", subheadingStyle},
+		{"Bataan Peninsula State University | 2025 - Present", mutedStyle},
+		{"    • President's Lister", bodyStyle},
+		{"    • GWA (1.3x)", bodyStyle},
+		{"", bodyStyle},
+
+		{
+			"Technical Vocational and Livelihood - Information and Communications Technology",
+			subheadingStyle,
+		},
+		{"Bataan National High School | 2023 - 2025", mutedStyle},
+		{"    • With High Honors", bodyStyle},
+		{
+			"    • Awarded Outstanding in Computer Systems Servicing (Grade: 100%)",
+			bodyStyle,
+		},
+		{"", bodyStyle},
+
+		// Experience
+		{"EXPERIENCES", sectionStyle},
+		{"", bodyStyle},
+
+		{
+			"Regional Assembly on Information Technology Education (RAITE)",
+			subheadingStyle,
+		},
+		{"Quiz Bee Representative | 2025", mutedStyle},
+		{"Nueva Ecija University of Science and Technology", mutedStyle},
+		{
+			"    • Competed as the Quiz Bee Representative for Bataan Peninsula State University",
+			bodyStyle,
+		},
+		{"", bodyStyle},
+
+		{
+			"Student Society of Information Technology Education",
+			subheadingStyle,
+		},
+		{"Vice Chairperson for External Affairs | 2025", mutedStyle},
+		{
+			"    • Helped with the first external sponsorship of SSITE",
+			bodyStyle,
+		},
+		{"", bodyStyle},
+
+		{"National Service Training Program (NSTP)", subheadingStyle},
+		{"Project Lead | 2026", mutedStyle},
+		{"Leadership Awardee | 2026", mutedStyle},
+		{
+			"    • Led the Literacy Training Service cluster to complete a Campus Based Project",
+			bodyStyle,
+		},
+		{
+			"      under significant budget and time constraints.",
+			bodyStyle,
+		},
+		{"", bodyStyle},
+
+		// Skills
+		{"SKILLSET", sectionStyle},
+		{"", bodyStyle},
+
+		{"DevOps and Infrastructure", subheadingStyle},
+		{"    • Docker", bodyStyle},
+		{"    • Terraform", bodyStyle},
+		{"    • GitHub Actions", bodyStyle},
+		{"    • Linux", bodyStyle},
+		{"", bodyStyle},
+
+		{"Backend and Database", subheadingStyle},
+		{"    • Go", bodyStyle},
+		{"    • Node.js", bodyStyle},
+		{"    • Java", bodyStyle},
+		{"    • PostgreSQL", bodyStyle},
+		{"    • SQLite", bodyStyle},
+		{"", bodyStyle},
+
+		{"Systems Programming and Embedded", subheadingStyle},
+		{"    • C", bodyStyle},
+		{"    • Rust", bodyStyle},
+		{"    • ESP32", bodyStyle},
+		{"", bodyStyle},
+
+		{"Scripting and Automation", subheadingStyle},
+		{"    • Bash", bodyStyle},
+		{"    • Lua", bodyStyle},
+		{"    • Python", bodyStyle},
+		{"    • Maven", bodyStyle},
+		{"    • Gradle", bodyStyle},
+		{"", bodyStyle},
+
+		{"Frontend and Frameworks", subheadingStyle},
+		{"    • Tauri v2 (Rust)", bodyStyle},
+		{"    • Express.js", bodyStyle},
+		{"    • React.js", bodyStyle},
+		{"    • Tailwind CSS", bodyStyle},
+		{"    • Alpine.js", bodyStyle},
+		{"", bodyStyle},
+
+		{"Tools for Development", subheadingStyle},
+		{"    • Arch Linux", bodyStyle},
+		{"    • Neovim", bodyStyle},
+		{"    • Blender", bodyStyle},
+		{"    • Godot", bodyStyle},
+		{"    • Git", bodyStyle},
+		{"", bodyStyle},
+
+		// Certifications
+		{"CERTIFICATIONS", sectionStyle},
+		{"", bodyStyle},
+
+		{"IC3 Digital Literacy Certification - Level 1", subheadingStyle},
+		{"October 2025", mutedStyle},
+		{"", bodyStyle},
+
+		{"ITS: Java Certification", subheadingStyle},
+		{"April 2026", mutedStyle},
+	}
+}
+
+func (model Model) aboutContent() string {
 	var builder strings.Builder
+	query := model.search.Value()
+	lines := model.aboutLines()
 
-	// Identity
-	builder.WriteString("\n\n")
-	builder.WriteString(nameStyle.Render("Kherbin Clloyde Buenaventura"))
-	builder.WriteString("\n")
-	builder.WriteString(mutedStyle.Render("20 years old"))
-	builder.WriteString("\n")
-	builder.WriteString(mutedStyle.Render("Based in Bataan, Philippines"))
-	builder.WriteString("\n\n")
+	for i, line := range lines {
+		text := highlightSearch(line.Text, query)
+		builder.WriteString(line.Style.Render(text))
 
-	builder.WriteString(bodyStyle.Render(
-		"Computer Science Student @ Bataan Peninsula State University",
-	))
-	builder.WriteString("\n")
-	builder.WriteString(bodyStyle.Render(
-		"Vice President for Externals - Student Society of Information Technology Education",
-	))
-	builder.WriteString("\n\n")
+		if i < len(lines) -1 {
+			builder.WriteString("\n")
+		}
 
-	// Introduction
-	builder.WriteString(bodyStyle.Render(
-		"This is an SSH portfolio written in the Go programming language and deployed in a Google VM.",
-	))
-	builder.WriteString("\n\n")
-
-	builder.WriteString(bodyStyle.Render(
-		`A question you might ask is "Why SSH?"`,
-	))
-	builder.WriteString("\n\n")
-
-	builder.WriteString(bodyStyle.Render(
-		"Instead of making a website portfolio and deploying it on a platform that does everything for me,",
-	))
-	builder.WriteString("\n")
-	builder.WriteString(bodyStyle.Render(
-		"I wanted to learn how deployment works internally.",
-	))
-	builder.WriteString("\n\n")
-
-	builder.WriteString(bodyStyle.Render("Learning things like:"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Terraform"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Google Cloud"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Networking"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("SSH"))
-	builder.WriteString("\n\n")
-
-	builder.WriteString(bodyStyle.Render(
-		"It is also a good insight into my terminal-centric workflow.",
-	))
-	builder.WriteString("\n\n")
-
-	builder.WriteString(bodyStyle.Render(
-		"I am an aspiring DevOps engineer, and this is also why I made a terminal portfolio.",
-	))
-	builder.WriteString("\n\n")
-
-	// Education
-	builder.WriteString(sectionStyle.Render("EDUCATION"))
-	builder.WriteString("\n\n")
-
-	builder.WriteString(subheadingStyle.Render(
-		"Bachelor of Science in Computer Science",
-	))
-	builder.WriteString("\n")
-	builder.WriteString(mutedStyle.Render(
-		"Bataan Peninsula State University | 2025 - Present",
-	))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("President's Lister"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("GWA (1.3x)"))
-	builder.WriteString("\n\n")
-
-	builder.WriteString(subheadingStyle.Render(
-		"Technical Vocational and Livelihood - Information and Communications Technology",
-	))
-	builder.WriteString("\n")
-	builder.WriteString(mutedStyle.Render(
-		"Bataan National High School | 2023 - 2025",
-	))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("With High Honors"))
-	builder.WriteString("\n")
-	builder.WriteString(
-		bulletStyle.Render("    • ") +
-			bodyStyle.Render("Awarded Outstanding in Computer Systems Servicing (Grade: 100%)"),
-	)
-	builder.WriteString("\n\n")
-
-	// Experience
-	builder.WriteString(sectionStyle.Render("EXPERIENCES"))
-	builder.WriteString("\n\n")
-
-	builder.WriteString(subheadingStyle.Render(
-		"Regional Assembly on Information Technology Education (RAITE)",
-	))
-	builder.WriteString("\n")
-	builder.WriteString(mutedStyle.Render(
-		"Quiz Bee Representative | 2025",
-	))
-	builder.WriteString("\n")
-	builder.WriteString(mutedStyle.Render(
-		"Nueva Ecija University of Science and Technology",
-	))
-	builder.WriteString("\n")
-	builder.WriteString(
-		bulletStyle.Render("    • ") +
-			bodyStyle.Render("Competed as the Quiz Bee Representative for Bataan Peninsula State University"),
-	)
-	builder.WriteString("\n\n")
-
-	builder.WriteString(subheadingStyle.Render(
-		"Student Society of Information Technology Education",
-	))
-	builder.WriteString("\n")
-	builder.WriteString(mutedStyle.Render(
-		"Vice Chairperson for External Affairs | 2025",
-	))
-	builder.WriteString("\n")
-	builder.WriteString(
-		bulletStyle.Render("    • ") +
-			bodyStyle.Render("Helped with the first external sponsorship of SSITE"),
-	)
-	builder.WriteString("\n\n")
-
-	builder.WriteString(subheadingStyle.Render(
-		"National Service Training Program (NSTP)",
-	))
-	builder.WriteString("\n")
-	builder.WriteString(mutedStyle.Render(
-		"Project Lead | 2026",
-	))
-	builder.WriteString("\n")
-	builder.WriteString(mutedStyle.Render(
-		"Leadership Awardee | 2026",
-	))
-	builder.WriteString("\n")
-	builder.WriteString(
-		bulletStyle.Render("    • ") +
-			bodyStyle.Render("Led the Literacy Training Service cluster to complete a Campus Based Project"),
-	)
-	builder.WriteString("\n")
-	builder.WriteString(
-		bulletStyle.Render("      ") +
-			bodyStyle.Render("under significant budget and time constraints."),
-	)
-	builder.WriteString("\n\n")
-
-	// Skills
-	builder.WriteString(sectionStyle.Render("SKILLSET"))
-	builder.WriteString("\n\n")
-
-	builder.WriteString(subheadingStyle.Render("DevOps and Infrastructure"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Docker"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Terraform"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("GitHub Actions"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Linux"))
-	builder.WriteString("\n\n")
-
-	builder.WriteString(subheadingStyle.Render("Backend and Database"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Go"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Node.js"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Java"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("PostgreSQL"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("SQLite"))
-	builder.WriteString("\n\n")
-
-	builder.WriteString(subheadingStyle.Render("Systems Programming and Embedded"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("C"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Rust"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("ESP32"))
-	builder.WriteString("\n\n")
-
-	builder.WriteString(subheadingStyle.Render("Scripting and Automation"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Bash"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Lua"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Python"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Maven"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Gradle"))
-	builder.WriteString("\n\n")
-
-	builder.WriteString(subheadingStyle.Render("Frontend and Frameworks"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Tauri v2 (Rust)"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Express.js"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("React.js"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Tailwind CSS"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Alpine.js"))
-	builder.WriteString("\n\n")
-
-	builder.WriteString(subheadingStyle.Render("Tools for Development"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Arch Linux"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Neovim"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Blender"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Godot"))
-	builder.WriteString("\n")
-	builder.WriteString(bulletStyle.Render("    • ") + bodyStyle.Render("Git"))
-	builder.WriteString("\n\n")
-
-	// Certifications
-	builder.WriteString(sectionStyle.Render("CERTIFICATIONS"))
-	builder.WriteString("\n\n")
-
-	builder.WriteString(subheadingStyle.Render(
-		"IC3 Digital Literacy Certification - Level 1",
-	))
-	builder.WriteString("\n")
-	builder.WriteString(mutedStyle.Render("October 2025"))
-	builder.WriteString("\n\n")
-
-	builder.WriteString(subheadingStyle.Render(
-		"ITS: Java Certification",
-	))
-	builder.WriteString("\n")
-	builder.WriteString(mutedStyle.Render("April 2026"))
-
+	}
 	return builder.String()
 }
 

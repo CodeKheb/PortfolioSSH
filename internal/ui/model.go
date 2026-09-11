@@ -29,10 +29,13 @@ type Model struct {
 	scroll   int
 
 	viewport viewport.Model
-	search textinput.Model
+	search   textinput.Model
+
+	searchMatches []int
+	searchIndex   int
+	searching     bool
 
 	showFooter bool
-	searching  bool
 }
 
 // Initialize tea
@@ -86,7 +89,7 @@ func ViewportModel() Model {
 
 	return Model{
 		viewport:   vp,
-		search: input,
+		search:     input,
 		showFooter: true,
 	}
 }

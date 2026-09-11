@@ -63,6 +63,12 @@ var (
 				Foreground(lipgloss.Color("#565F89")).
 				Padding(2, 4)
 
+	// Search
+	searchHighlightStyle = lipgloss.NewStyle().
+				Background(lipgloss.Color("#2D7DFF")).
+				Foreground(lipgloss.Color("#FFFFFF")).
+				Bold(true)
+
 	// Footer Style
 	keyStyle = lipgloss.NewStyle().
 			Bold(true).

@@ -2,108 +2,57 @@ package ui
 
 import "strings"
 
-func aboutSearchText() string {
-	return `Kherbin Clloyde Buenavuenta
-20 years old
-Based in Bataan, Philippines
+func (model Model) aboutSearchText() string {
+	lines := model.aboutLines()
 
-Computer Science Student @ Bataan Peninsula State University
-Vice President for Externals - Student Society of Information Technology Education
+	var builder strings.Builder
 
-This is an SSH portfolio written in the Go programming language and deployed in a Google VM.
+	for i, line := range lines {
+		builder.WriteString(line.Text)
 
-A question you might ask is "Why SSH?"
+		if i < len(lines)-1 {
+			builder.WriteString("\n")
+		}
+	}
 
-Instead of making a website portfolio and deploying it on a platform that does everything for me,
-I wanted to learn how deployment works internally.
+	return builder.String()
+}
 
-Learning things like:
-    • Terraform
-    • Google Cloud
-    • Networking
-    • SSH
 
-It is also a good insight into my terminal-centric workflow.
+func highlightSearch(text string, query string) string {
+	query = strings.TrimSpace(query)
 
-I am an aspiring DevOps engineer, and this is also why I made a terminal portfolio.
+	if query == "" {
+		return text
+	}
 
-EDUCATION
+	lowerText := strings.ToLower(text)
+	lowerQuery := strings.ToLower(query)
 
-Bachelor of Science in Computer Science
-Bataan Peninsula State University | 2025 - Present
-    • President's Lister
-    • GWA (1.3x)
+	var builder strings.Builder
+	start := 0
 
-Technical Vocational and Livelihood - Information and Communications Technology
-Bataan National High School | 2023 - 2025
-    • With High Honors
-    • Awarded Outstanding in Computer Systems Servicing (Grade: 100%)
+	for {
+		index := strings.Index(lowerText[start:], lowerQuery)
 
-EXPERIENCES
+		if index == -1 {
+			builder.WriteString(text[start:])
+			break
+		}
 
-Regional Assembly on Information Technology Education (RAITE)
-Quiz Bee Representative | 2025
-Nueva Ecija University of Science and Technology
-    • Competed as the Quiz Bee Representative for Bataan Peninsula State University
+		index += start
 
-Student Society of Information Technology Education
-Vice Chairperson for External Affairs | 2025
-    • Helped with the first external sponsorship of SSITE
+		builder.WriteString(text[start:index])
+		builder.WriteString(
+			searchHighlightStyle.Render(
+				text[index : index+len(query)],
+			),
+		)
 
-National Service Training Program (NSTP)
-Project Lead | 2026
-Leadership Awardee | 2026
-    • Led the Literacy Training Service cluster to complete a Campus Based Project
-      under significant budget and time constraints.
+		start = index + len(query)
+	}
 
-SKILLSET
-
-DevOps and Infrastructure
-    • Docker
-    • Terraform
-    • GitHub Actions
-    • Linux
-
-Backend and Database
-    • Go
-    • Node.js
-    • Java
-    • PostgreSQL
-    • SQLite
-
-Systems Programming and Embedded
-    • C
-    • Rust
-    • ESP32
-
-Scripting and Automation
-    • Bash
-    • Lua
-    • Python
-    • Maven
-    • Gradle
-
-Frontend and Frameworks
-    • Tauri v2 (Rust)
-    • Express.js
-    • React.js
-    • Tailwind CSS
-    • Alpine.js
-
-Tools for Development
-    • Arch Linux
-    • Neovim
-    • Blender
-    • Godot
-    • Git
-
-CERTIFICATIONS
-
-IC3 Digital Literacy Certification - Level 1
-October 2025
-
-ITS: Java Certification
-April 2026`
+	return builder.String()
 }
 
 func (model *Model) searchContent() {
@@ -116,10 +65,10 @@ func (model *Model) searchContent() {
 
 	query = strings.ToLower(query)
 
-	lines := strings.Split(aboutSearchText(), "\n")
+	lines := model.aboutLines()
 
 	for i, line := range lines {
-		if strings.Contains(strings.ToLower(line), query) {
+		if strings.Contains(strings.ToLower(line.Text), query) {
 			model.viewport.SetYOffset(i)
 			return
 		}

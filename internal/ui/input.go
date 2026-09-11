@@ -18,6 +18,8 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 
 			default:
 				model.search, cmd = model.search.Update(message)
+				model.viewport.SetContent(model.aboutContent())
+
 				model.searchContent()
 				return model, cmd
 			}
@@ -72,7 +74,7 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 		switch model.selected {
 		case 0:
 			model.screen = AboutScreen
-			model.viewport.SetContent(aboutContent())
+			model.viewport.SetContent(model.aboutContent())
 			model.viewport.GotoTop()
 		}
 	case "?":
