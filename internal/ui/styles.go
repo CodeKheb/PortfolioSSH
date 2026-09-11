@@ -18,7 +18,7 @@ var (
 	// About page.
 	nameStyle = lipgloss.NewStyle().
 			Bold(true).
-			Foreground(lipgloss.Color("#7AA2F7")).
+			Foreground(lipgloss.Color("#2D7DFF")).
 			MarginBottom(1)
 
 	sectionStyle = lipgloss.NewStyle().
@@ -29,16 +29,16 @@ var (
 
 	subheadingStyle = lipgloss.NewStyle().
 			Bold(true).
-			Foreground(lipgloss.Color("#7AA2F7"))
+			Foreground(lipgloss.Color("#73DACA"))
 
 	bulletStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#7AA2F7"))
+			Foreground(lipgloss.Color("#F7768E"))
 
 	mutedStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#565F89"))
+			Foreground(lipgloss.Color("#A9B1D6"))
 
 	bodyStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#C0CAF5"))
+			Foreground(lipgloss.Color("#FFFFFF"))
 
 	// Menu Style
 	titleStyle = lipgloss.NewStyle().
