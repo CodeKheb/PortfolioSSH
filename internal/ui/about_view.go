@@ -1,24 +1,22 @@
 package ui
 
 import (
-	"strings"
-
 	"github.com/charmbracelet/lipgloss"
 )
 
-type AboutLine struct {
+type ContentLine struct {
 	Text  string
 	Style lipgloss.Style
 }
 
-func (model Model) aboutLines() []AboutLine {
-	return []AboutLine{
+func (model Model) aboutLines() []ContentLine {
+	return []ContentLine{
 		// Identity
 		{"", bodyStyle},
 		{"", bodyStyle},
 		{"Kherbin Clloyde Buenaventura", nameStyle},
-		{"20 years old", mutedStyle},
-		{"Based in Bataan, Philippines", mutedStyle},
+		{"Age: 		20 years old", mutedStyle},
+		{"Location: Based in Bataan, Philippines", mutedStyle},
 		{"", bodyStyle},
 		{"", bodyStyle},
 
@@ -28,6 +26,7 @@ func (model Model) aboutLines() []AboutLine {
 		{"", bodyStyle},
 
 		// Introduction
+		{"What this project is:", sectionStyle},
 		{"This is an SSH portfolio written in the Go programming language and deployed in a Google VM.", bodyStyle},
 		{"", bodyStyle},
 
@@ -176,20 +175,7 @@ func (model Model) aboutLines() []AboutLine {
 }
 
 func (model Model) aboutContent() string {
-	var builder strings.Builder
-	query := model.search.Value()
-	lines := model.aboutLines()
-
-	for i, line := range lines {
-		text := highlightSearch(line.Text, query)
-		builder.WriteString(line.Style.Render(text))
-
-		if i < len(lines) -1 {
-			builder.WriteString("\n")
-		}
-
-	}
-	return builder.String()
+	return model.renderLines(model.aboutLines())
 }
 
 func (model Model) AboutView() string {

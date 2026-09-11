@@ -2,22 +2,21 @@ package ui
 
 import "strings"
 
-func (model Model) aboutSearchText() string {
-	lines := model.aboutLines()
-
+func (model Model) renderLines(lines []ContentLine) string {
 	var builder strings.Builder
+	query := model.search.Value()
 
 	for i, line := range lines {
-		builder.WriteString(line.Text)
+		text := highlightSearch(line.Text, query)
+		builder.WriteString(line.Style.Render(text))
 
-		if i < len(lines)-1 {
+		if i < len(lines) -1 {
 			builder.WriteString("\n")
 		}
-	}
 
+	}
 	return builder.String()
 }
-
 
 func highlightSearch(text string, query string) string {
 	query = strings.TrimSpace(query)
@@ -55,6 +54,19 @@ func highlightSearch(text string, query string) string {
 	return builder.String()
 }
 
+func (model Model) searchableLines() []ContentLine {
+	switch model.screen {
+	case AboutScreen:
+		return model.aboutLines()
+
+	// TODO: More Screen cases
+
+	default:
+		// return model.menuLines()
+		return nil
+	}
+}
+
 func (model *Model) searchContent() {
 	query := strings.TrimSpace(model.search.Value())
 
@@ -66,8 +78,7 @@ func (model *Model) searchContent() {
 	}
 
 	query = strings.ToLower(query)
-
-	lines := model.aboutLines()
+	lines := model.searchableLines()
 
 	model.searchMatches = nil
 

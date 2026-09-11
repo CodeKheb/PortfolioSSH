@@ -28,6 +28,9 @@ var menuItems = []MenuItems{
 	},
 }
 
+// TODO: Make menuLines
+// func (model Model) menuLines() []ContentLine 
+
 // The first ui the user sees, contains the navigation 
 func (model Model) MenuView() string {
 	var builder strings.Builder
