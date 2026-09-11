@@ -47,8 +47,13 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 		case "/":
 			model.searching = true
 			model.search.Focus()
-
 			return model, textinput.Blink
+		case "n":
+			model.nextSearchMatch()
+			return model, nil
+		case "N":
+			model.previousSearchMatch()
+			return model, nil
 		}
 
 		return model, nil

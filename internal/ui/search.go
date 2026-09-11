@@ -59,6 +59,8 @@ func (model *Model) searchContent() {
 	query := strings.TrimSpace(model.search.Value())
 
 	if query == "" {
+		model.searchMatches = nil
+		model.searchIndex = 0
 		model.viewport.GotoTop()
 		return
 	}
@@ -67,10 +69,50 @@ func (model *Model) searchContent() {
 
 	lines := model.aboutLines()
 
+	model.searchMatches = nil
+
 	for i, line := range lines {
 		if strings.Contains(strings.ToLower(line.Text), query) {
-			model.viewport.SetYOffset(i)
-			return
+			model.searchMatches = append(model.searchMatches, i)
 		}
 	}
+
+	if len(model.searchMatches) == 0 {
+		return
+	}
+
+	model.searchIndex = 0
+	model.viewport.SetYOffset(model.searchMatches[model.searchIndex])
+}
+
+func (model *Model) nextSearchMatch() {
+	if len(model.searchMatches) == 0 {
+		return
+	}
+
+	model.searchIndex++
+
+	if model.searchIndex >= len(model.searchMatches) {
+		model.searchIndex = 0
+	}
+
+	model.viewport.SetYOffset(
+		model.searchMatches[model.searchIndex],
+	)
+}
+
+func (model *Model) previousSearchMatch() {
+	if len(model.searchMatches) == 0 {
+		return
+	}
+
+	model.searchIndex--
+
+	if model.searchIndex < 0 {
+		model.searchIndex = len(model.searchMatches) - 1
+	}
+
+	model.viewport.SetYOffset(
+		model.searchMatches[model.searchIndex],
+	)
 }
