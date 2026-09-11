@@ -15,14 +15,14 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 		}
 	case "j", "down":
 		{
-			if model.selected < len(menuItems) - 1 {
+			if model.selected < len(menuItems)-1 {
 				model.selected++
 			}
 		}
 	case "enter":
 		switch model.selected {
-			case 0:
-				model.screen = AboutScreen
+		case 0:
+			model.screen = AboutScreen
 		}
 	}
 	return model, nil

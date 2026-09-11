@@ -1,7 +1,5 @@
 package ui
 
 func (model Model) AboutView() string {
-	return appStyle.Render("It's me");
+	return appStyle.Render("It's me")
 }
-
-

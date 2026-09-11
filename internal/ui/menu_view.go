@@ -28,6 +28,7 @@ var menuItems = []MenuItems{
 	},
 }
 
+// The first ui the user sees, contains the navigation 
 func (model Model) MenuView() string {
 	var builder strings.Builder
 
