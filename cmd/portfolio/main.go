@@ -10,7 +10,10 @@ import (
 // Main program
 // starts the lipgloss UI
 func main() {
-	program := tea.NewProgram(ui.Model{}, tea.WithAltScreen())
+	program := tea.NewProgram(
+		ui.ViewportModel(),
+		tea.WithAltScreen(),
+	)
 	if _, err := program.Run()
 
 	err != nil {

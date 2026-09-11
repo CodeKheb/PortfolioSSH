@@ -9,6 +9,12 @@ var (
 	appStyle = lipgloss.NewStyle().
 			Padding(1, 2)
 
+	headerStyle = lipgloss.NewStyle().
+			Bold(true).
+			Foreground(lipgloss.Color("#1A1B26")).
+			Background(lipgloss.Color("#7AA2F7")).
+			Padding(1, 2)
+
 	titleStyle = lipgloss.NewStyle().
 			Bold(true).
 			Foreground(lipgloss.Color("#FFFDF5")).
