@@ -23,6 +23,7 @@ func (model Model) layout(content string) string {
 	)
 }
 
+// layout with header
 func (model Model) layoutWithHeader(header, content string) string {
 	footer := model.footerView()
 
@@ -77,6 +78,9 @@ func (model Model) footerView() string {
 	)
 }
 
+// headerView that takes in a string 
+// adjusts to the width of the users terminal
+// returns with headerStyle
 func (model Model) headerView(header string) string {
 	return headerStyle.
 		Width(model.width).

@@ -79,11 +79,13 @@ func (model Model) View() string {
 	}
 }
 
+// ViewportModel gets called in main.go
+// Initializes everything
 func ViewportModel() Model {
 	vp := viewport.New(0, 0)
 
 	input := textinput.New()
-	input.Placeholder = "Search..."
+	input.Placeholder = "Search...  •  n/N to navigate"
 	input.CharLimit = 100
 	input.Prompt = ""
 

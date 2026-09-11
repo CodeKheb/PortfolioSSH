@@ -4,14 +4,12 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-type ContentLine struct {
-	Text  string
-	Style lipgloss.Style
-}
-
+// aboutLines, returns the ContentLine struct as an array
 func (model Model) aboutLines() []ContentLine {
 	return []ContentLine{
 		// Identity
+		{"", bodyStyle},
+		{"", bodyStyle},
 		{"", bodyStyle},
 		{"", bodyStyle},
 		{"Kherbin Clloyde Buenaventura", nameStyle},
@@ -121,12 +119,14 @@ func (model Model) aboutLines() []ContentLine {
 		{"    • Terraform", bodyStyle},
 		{"    • GitHub Actions", bodyStyle},
 		{"    • Linux", bodyStyle},
+		{"    • Google Cloud Platform (GCP)", bodyStyle},
 		{"", bodyStyle},
 
 		{"Backend and Database", subheadingStyle},
 		{"    • Go", bodyStyle},
 		{"    • Node.js", bodyStyle},
 		{"    • Java", bodyStyle},
+		{"    • C#", bodyStyle},
 		{"    • PostgreSQL", bodyStyle},
 		{"    • SQLite", bodyStyle},
 		{"", bodyStyle},
@@ -174,10 +174,12 @@ func (model Model) aboutLines() []ContentLine {
 	}
 }
 
+// aboutContent calls aboutLines and pass it to renderLines() inside search.go
 func (model Model) aboutContent() string {
 	return model.renderLines(model.aboutLines())
 }
 
+// about view, gets switched inside View() in model.go
 func (model Model) AboutView() string {
 	header := model.headerView("ABOUT 	KHERBIN BUENAVENTURA")
 
