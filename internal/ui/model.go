@@ -6,6 +6,7 @@ package ui
 */
 
 import (
+	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -28,8 +29,10 @@ type Model struct {
 	scroll   int
 
 	viewport viewport.Model
+	search textinput.Model
 
 	showFooter bool
+	searching  bool
 }
 
 // Initialize tea
@@ -76,9 +79,14 @@ func (model Model) View() string {
 func ViewportModel() Model {
 	vp := viewport.New(0, 0)
 
+	input := textinput.New()
+	input.Placeholder = "Search..."
+	input.CharLimit = 100
+	input.Prompt = ""
+
 	return Model{
 		viewport:   vp,
+		search: input,
 		showFooter: true,
 	}
 }
-

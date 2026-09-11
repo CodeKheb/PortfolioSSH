@@ -48,6 +48,13 @@ func (model Model) layoutWithHeader(header, content string) string {
 func (model Model) footerView() string {
 	helper := ""
 
+	if model.searching {
+		return instructionsStyle.Render(
+			keyStyle.Render("> ") + model.search.View(),
+		)
+
+	}
+
 	if model.showFooter {
 		helper =
 			labelStyle.Render("Navigate") + " " +

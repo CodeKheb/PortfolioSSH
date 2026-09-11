@@ -1,9 +1,30 @@
 package ui
 
-import tea "github.com/charmbracelet/bubbletea"
+import (
+	"github.com/charmbracelet/bubbles/textinput"
+	tea "github.com/charmbracelet/bubbletea"
+)
 
 func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 	if model.screen == AboutScreen {
+		var cmd tea.Cmd
+
+		if model.searching {
+			switch message.String() {
+			case "esc", "enter":
+				model.searching = false
+				model.search.Blur()
+				model.search.Reset()
+
+			default:
+				model.search, cmd = model.search.Update(message)
+				model.searchContent()
+				return model, cmd
+			}
+
+			return model, nil
+		}
+
 		switch message.String() {
 		case "esc", "b":
 			model.screen = MenuScreen
@@ -21,8 +42,12 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 			model.viewport.HalfPageUp()
 		case "?":
 			model.showFooter = !model.showFooter
-		}
+		case "/":
+			model.searching = true
+			model.search.Focus()
 
+			return model, textinput.Blink
+		}
 
 		return model, nil
 	}
