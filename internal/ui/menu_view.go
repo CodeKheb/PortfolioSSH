@@ -5,30 +5,30 @@ import (
 )
 
 type MenuItems struct {
-	Title string
+	Title       string
 	Description string
 }
 
-var menuItems = []MenuItems {
+var menuItems = []MenuItems{
 	{
-		Title: "About",
+		Title:       "About",
 		Description: "Hi lol",
 	},
 	{
-		Title: "Projects",
+		Title:       "Projects",
 		Description: "What I larp about",
 	},
 	{
-		Title: "Skills",
+		Title:       "Skills",
 		Description: "A bit of this a bit of that",
 	},
 	{
-		Title: "Contact",
+		Title:       "Contact",
 		Description: "CodeKheb",
 	},
 }
 
-func (model Model) MainView() string {
+func (model Model) MenuView() string {
 	var builder strings.Builder
 
 	builder.WriteString(titleStyle.Render("Kherbin's Portfolio"))
@@ -39,7 +39,7 @@ func (model Model) MainView() string {
 		if i == model.selected {
 			builder.WriteString(selectedItemStyle.Render(">" + items.Title))
 		} else {
-			builder.WriteString(selectedItemStyle.Render(" " + items.Title))
+			builder.WriteString(itemStyle.Render(" " + items.Title))
 		}
 
 		builder.WriteString("\n")
@@ -55,7 +55,7 @@ func (model Model) MainView() string {
 
 	instructions := instructionsStyle.Render(
 		"↑/↓ Navigate • Enter Select • q Quit\n\n" +
-		"Supports vim navigation  j/k	",
+			"Supports vim navigation  j/k	",
 	)
 
 	return appStyle.Render(builder.String() + instructions)

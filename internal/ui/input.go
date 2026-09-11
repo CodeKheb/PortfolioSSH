@@ -19,6 +19,11 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 				model.selected++
 			}
 		}
+	case "enter":
+		switch model.selected {
+			case 0:
+				model.screen = AboutScreen
+		}
 	}
 	return model, nil
 }

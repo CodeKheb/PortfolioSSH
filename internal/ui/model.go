@@ -4,10 +4,20 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+type Screen int
+
+const (
+	MenuScreen Screen = iota
+	AboutScreen
+)
+
+
+
 type Model struct {
 	width  int
 	height int
 	selected int
+	screen Screen
 }
 
 func (model Model) Init() tea.Cmd {
@@ -29,5 +39,10 @@ func (model Model) Update(message tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (model Model) View() string {
-	return model.MainView()
+	switch model.screen {
+	case AboutScreen:
+		return model.AboutView()
+	default:
+		return model.MenuView()
+	}
 }
