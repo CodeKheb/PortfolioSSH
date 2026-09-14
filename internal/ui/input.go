@@ -59,6 +59,55 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 		return model, nil
 	}
 
+	if model.screen == ProjectScreen {
+		var cmd tea.Cmd
+
+		// TODO: ADD SEARCH !!
+		if model.searching {
+			switch message.String() {
+			case "esc", "enter":
+				model.searching = false
+				model.search.Blur()
+				model.search.Reset()
+
+			default:
+				model.search, cmd = model.search.Update(message)
+				return model, cmd
+			}
+
+			return model, nil
+		}
+
+		switch message.String() {
+		case "k", "up":
+			{
+				if model.selected > 0 {
+					model.selected--
+				}
+			}
+		case "j", "down":
+			{
+				if model.selected < len(projectItems)-1 {
+					model.selected++
+				}
+			}
+		case "esc", "b":
+			model.screen = MenuScreen
+		case "q":
+			return model, tea.Quit
+
+		case "/":
+			model.searching = true
+			model.search.Focus()
+			return model, textinput.Blink
+		case "?":
+			model.showFooter = !model.showFooter
+		}
+
+
+		return model, nil
+	}
+
 	switch message.String() {
 	case "q":
 		return model, tea.Quit
@@ -81,6 +130,8 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 			model.screen = AboutScreen
 			model.viewport.SetContent(model.aboutContent())
 			model.viewport.GotoTop()
+		case 1:
+			model.screen = ProjectScreen
 		}
 	case "?":
 		model.showFooter = !model.showFooter

@@ -29,9 +29,9 @@ var menuItems = []MenuItems{
 }
 
 // TODO: Make menuLines
-// func (model Model) menuLines() []ContentLine 
+// func (model Model) menuLines() []ContentLine
 
-// The first ui the user sees, contains the navigation 
+// The first ui the user sees, contains the navigation
 func (model Model) MenuView() string {
 	var builder strings.Builder
 
@@ -42,15 +42,12 @@ func (model Model) MenuView() string {
 
 		if i == model.selected {
 			builder.WriteString(selectedItemStyle.Render(">" + items.Title))
+			builder.WriteString(
+				descriptionStyle.Render("\n" + menuItems[i].Description),
+			)
 		} else {
 			builder.WriteString(itemStyle.Render(" " + items.Title))
 		}
-
-		builder.WriteString("\n")
-
-		builder.WriteString(
-			descriptionStyle.Render(items.Description),
-		)
 
 		builder.WriteString("\n\n\n")
 	}

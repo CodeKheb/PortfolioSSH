@@ -14,7 +14,7 @@ func (model Model) aboutLines() []ContentLine {
 		{"", bodyStyle},
 		{"Kherbin Clloyde Buenaventura", nameStyle},
 		{"Age: 		20 years old", mutedStyle},
-		{"Location: Based in Bataan, Philippines", mutedStyle},
+		{"Location:    Based in Bataan, Philippines", mutedStyle},
 		{"", bodyStyle},
 		{"", bodyStyle},
 
@@ -111,7 +111,7 @@ func (model Model) aboutLines() []ContentLine {
 		{"", bodyStyle},
 
 		// Skills
-		{"SKILLSET", sectionStyle},
+		{"SKILLSET & LANGUAGES", sectionStyle},
 		{"", bodyStyle},
 
 		{"DevOps and Infrastructure", subheadingStyle},
