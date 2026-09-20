@@ -1,15 +1,15 @@
 package ui
 
-import "strings"
-
-type ProjectItems struct {
+type Project struct {
 	Title       string
 	Technology  string
 	Description string
+	RepoURL     string
+	README      string
 	// TODO: Add more larp here
 }
 
-var projectItems = []ProjectItems{
+var projectItems = []Project{
 	{
 		Title:       "ProjectSSH",
 		Technology:  "Go, Terraform, GCP, SSH",
@@ -24,30 +24,57 @@ var projectItems = []ProjectItems{
 	// TODO: ADD MORE PROJECTS
 }
 
-func (model Model) ProjectView() string {
-	var builder strings.Builder
-
-	builder.WriteString(titleStyle.Render("Projects"))
-	builder.WriteString("\n\n")
-
-	for i, items := range projectItems {
-
-		if i == model.selected {
-			builder.WriteString(selectedItemStyle.Render(">" + projectItems[i].Title))
-			builder.WriteString("\n")
-			builder.WriteString(descriptionStyle.Render(
-				projectItems[i].Technology,
-			))
-			builder.WriteString("\n\n")
-			builder.WriteString(descriptionStyle.Render(
-				"Description:\n" +
-				projectItems[i].Description,
-			))
-		} else {
-			builder.WriteString(itemStyle.Render(" " + items.Title))
-		}
-		builder.WriteString("\n\n\n")
+func (model Model) projectLines() []ContentLine {
+	lines := []ContentLine{
+		{
+			Text:  "Projects",
+			Style: titleStyle,
+		},
 	}
 
-	return model.layout(builder.String())
+	for i, project := range projectItems {
+		if i == model.selected {
+			lines = append(
+				lines,
+				ContentLine{
+					Text:  "> " + project.Title,
+					Style: selectedItemStyle,
+				},
+				ContentLine{
+					Text:  project.Technology,
+					Style: descriptionStyle,
+				},
+				ContentLine{
+					Text:  "Description:",
+					Style: descriptionStyle,
+				},
+				ContentLine{
+					Text:  project.Description,
+					Style: descriptionStyle,
+				},
+			)
+		} else {
+			lines = append(
+				lines,
+				ContentLine{
+					Text:  "  " + project.Title,
+					Style: itemStyle,
+				},
+			)
+		}
+
+		lines = append(lines, ContentLine{})
+	}
+
+	return lines
+}
+
+func (model Model) projectContent() string {
+	return model.renderLines(model.projectLines())
+}
+
+func (model Model) ProjectView() string {
+	return model.layout(
+		model.renderLines(model.projectLines()),
+	)
 }

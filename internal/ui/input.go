@@ -62,16 +62,15 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 	if model.screen == ProjectScreen {
 		var cmd tea.Cmd
 
-		// TODO: ADD SEARCH !!
 		if model.searching {
 			switch message.String() {
 			case "esc", "enter":
 				model.searching = false
 				model.search.Blur()
-				model.search.Reset()
 
 			default:
 				model.search, cmd = model.search.Update(message)
+				model.searchProjects()
 				return model, cmd
 			}
 
@@ -80,16 +79,14 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 
 		switch message.String() {
 		case "k", "up":
-			{
-				if model.selected > 0 {
-					model.selected--
-				}
+			if model.selected > 0 {
+				model.selected--
+				model.updateContent()
 			}
 		case "j", "down":
-			{
-				if model.selected < len(projectItems)-1 {
-					model.selected++
-				}
+			if model.selected < len(projectItems)-1 {
+				model.selected++
+				model.updateContent()
 			}
 		case "esc", "b":
 			model.screen = MenuScreen
@@ -102,8 +99,14 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 			return model, textinput.Blink
 		case "?":
 			model.showFooter = !model.showFooter
-		}
+		case "n":
+			model.nextSearchMatch()
+			return model, nil
+		case "N":
+			model.previousSearchMatch()
+			return model, nil
 
+		}
 
 		return model, nil
 	}
@@ -113,16 +116,12 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 		return model, tea.Quit
 
 	case "k", "up":
-		{
-			if model.selected > 0 {
-				model.selected--
-			}
+		if model.selected > 0 {
+			model.selected--
 		}
 	case "j", "down":
-		{
-			if model.selected < len(menuItems)-1 {
-				model.selected++
-			}
+		if model.selected < len(menuItems)-1 {
+			model.selected++
 		}
 	case "enter":
 		switch model.selected {
@@ -132,6 +131,8 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 			model.viewport.GotoTop()
 		case 1:
 			model.screen = ProjectScreen
+			model.updateContent()
+			model.viewport.GotoTop()
 		}
 	case "?":
 		model.showFooter = !model.showFooter

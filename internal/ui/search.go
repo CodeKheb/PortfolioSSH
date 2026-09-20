@@ -41,7 +41,7 @@ func highlightSearch(text string, query string) string {
 	// remove trailing whitespace of the search
 	query = strings.TrimSpace(query)
 
-	// if no search, return 
+	// if no search, return
 	if query == "" {
 		return text
 	}
@@ -112,8 +112,8 @@ func (model *Model) searchContent() {
 		return
 	}
 
-	// lower case both the lines in the currentScreen 
-	// and the user search 
+	// lower case both the lines in the currentScreen
+	// and the user search
 	query = strings.ToLower(query)
 	lines := model.searchableLines()
 
@@ -122,7 +122,6 @@ func (model *Model) searchContent() {
 
 	// loop to find a match
 	for i, line := range lines {
-
 		// if the searchableLines contains the search
 		// append the index of the match
 		if strings.Contains(strings.ToLower(line.Text), query) {
@@ -143,41 +142,108 @@ func (model *Model) searchContent() {
 // jump to next search
 // called inside input.go with keypress "n"
 func (model *Model) nextSearchMatch() {
-	// no match, return
+	// no match return
 	if len(model.searchMatches) == 0 {
 		return
 	}
 
-	// jump to next match
+	// jump next match
 	model.searchIndex++
 
-	// if at the end of the matches, jump back to first match
+	// if already last, go back
 	if model.searchIndex >= len(model.searchMatches) {
 		model.searchIndex = 0
 	}
 
-	model.viewport.SetYOffset(
-		model.searchMatches[model.searchIndex],
-	)
+	match := model.searchMatches[model.searchIndex]
+
+	// projects screen
+	if model.screen == ProjectScreen {
+		model.selected = match
+		model.updateContent()
+		return
+	}
+
+	model.viewport.SetYOffset(match)
 }
 
 // jump to previous search
 // called inside input.go with keypress "N"
 func (model *Model) previousSearchMatch() {
-	// no match, return
 	if len(model.searchMatches) == 0 {
 		return
 	}
 
-	// jump to previous match
 	model.searchIndex--
 
-	// if already at first match, jump to last match
 	if model.searchIndex < 0 {
 		model.searchIndex = len(model.searchMatches) - 1
 	}
 
-	model.viewport.SetYOffset(
-		model.searchMatches[model.searchIndex],
-	)
+	match := model.searchMatches[model.searchIndex]
+
+	// projects screen
+	if model.screen == ProjectScreen {
+		model.selected = match
+		model.updateContent()
+		return
+	}
+
+	model.viewport.SetYOffset(match)
+}
+
+// search project_view
+func (model *Model) searchProjects() {
+	query := strings.TrimSpace(model.search.Value())
+
+	if query == "" {
+		model.searchMatches = nil
+		model.searchIndex = 0
+		model.updateContent()
+		return
+	}
+
+	query = strings.ToLower(query)
+
+	model.searchMatches = nil
+
+	for i, project := range projectItems {
+		searchable := strings.ToLower(
+			project.Title + " " +
+				project.Technology + " " +
+				project.Description,
+		)
+
+		if strings.Contains(searchable, query) {
+			model.searchMatches = append(
+				model.searchMatches,
+				i,
+			)
+		}
+	}
+
+	if len(model.searchMatches) == 0 {
+		return
+	}
+
+	model.searchIndex = 0
+	model.selected = model.searchMatches[0]
+
+	model.updateContent()
+}
+
+func (model *Model) updateContent() {
+	switch model.screen {
+	case AboutScreen:
+		model.viewport.SetContent(
+			model.renderLines(model.aboutLines()),
+		)
+
+	case ProjectScreen:
+		model.viewport.SetContent(
+			model.renderLines(model.projectLines()),
+		)
+
+		// TODO: Add more screens
+	}
 }
