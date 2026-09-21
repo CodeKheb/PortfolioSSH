@@ -15,10 +15,6 @@ var menuItems = []MenuItems{
 		Description: "What I larp about",
 	},
 	{
-		Title:       "Skills",
-		Description: "A bit of this a bit of that",
-	},
-	{
 		Title:       "Contact",
 		Description: "CodeKheb",
 	},
