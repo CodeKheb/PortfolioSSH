@@ -36,17 +36,17 @@ func (model Model) MenuView() string {
 	var builder strings.Builder
 
 	builder.WriteString(titleStyle.Render("Kherbin's Portfolio"))
-	builder.WriteString("\n\n")
+	builder.WriteString("\n\n\n")
 
 	for i, items := range menuItems {
 
 		if i == model.selected {
-			builder.WriteString(selectedItemStyle.Render(">" + items.Title))
+			builder.WriteString(selectedItemStyle.Render("> " + items.Title))
 			builder.WriteString(
 				descriptionStyle.Render("\n" + menuItems[i].Description),
 			)
 		} else {
-			builder.WriteString(itemStyle.Render(" " + items.Title))
+			builder.WriteString(itemStyle.Render("  " + items.Title))
 		}
 
 		builder.WriteString("\n\n\n")

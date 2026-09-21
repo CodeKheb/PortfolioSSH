@@ -59,6 +59,10 @@ func (model Model) projectLines() []ContentLine {
 		},
 	}
 
+	lines = append(lines, ContentLine{
+		Text: "\n",
+	})
+
 	for i, project := range projectItems {
 		if i == model.selected {
 			lines = append(
