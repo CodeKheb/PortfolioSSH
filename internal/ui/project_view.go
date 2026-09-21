@@ -18,7 +18,13 @@ var projectItems = []Project{
 	{
 		Title:       "CodeShare",
 		Technology:  "Node.js, OAuth2, Express.js",
-		Description: "DevKada Hackathon",
+		Description: `
+		DevKada Hackathon
+		CodeShare unifies real-time team chat with live GitHub integration. 
+		Attach a repository to a group chat, and every push, pull request, 
+		and release instantly surfaces as a system message right where your team is already talking. 
+		No notifications to miss. No context to lose. One conversation. Everything you need.
+		`,
 	},
 	{
 		Title:      "ESPresso",
@@ -45,6 +51,15 @@ var projectItems = []Project{
 		Customers arrive as processes with Arrival Time (AT) and Burst Time (BT), 
 		simulating a First Come First Serve (FCFS) scheduling algorithm.
 		The game also includes a rhythm minigame where players click to serve customers at the right time.
+		`,
+	},
+	{
+		Title: "dotfiles",
+		Technology: "Neovim, Linux, Lua, Bash",
+		Description: `
+		Personal Linux configuration files, 
+		built around an Arch-based setup with Neovim as the primary editor, 
+		a Sway (Wayland) desktop, and a set of rofi-powered launcher scripts.
 		`,
 	},
 
