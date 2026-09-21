@@ -1,22 +1,30 @@
 package main
 
 import (
-	"fmt"
+	"log"
 
-	"github.com/CodeKheb/PortfolioSSH/internal/ui"
-	tea "github.com/charmbracelet/bubbletea"
+	sshserver "github.com/CodeKheb/PortfolioSSH/internal/ssh"
 )
 
 // Main program
 // starts the lipgloss UI
 func main() {
-	program := tea.NewProgram(
-		ui.ViewportModel(),
-		tea.WithAltScreen(),
-	)
-	if _, err := program.Run()
-
-	err != nil {
-		fmt.Print(err)
+	server, err := sshserver.MainServer()
+	if err != nil {
+		log.Fatal(err)
 	}
+
+	if err := server.ListenAndServe(); err != nil {
+		log.Fatal(err)
+	}
+
+//	program := tea.NewProgram(
+//		ui.ViewportModel(),
+//		tea.WithAltScreen(),
+//	)
+//	if _, err := program.Run()
+//
+//	err != nil {
+//		fmt.Print(err)
+//	}
 }

@@ -41,3 +41,7 @@ bin/
 Thumbs.db
 *.swp
 *.swo
+
+# Host Keys
+host_key
+host_key.pub
