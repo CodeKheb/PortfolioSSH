@@ -32,24 +32,49 @@ func (model Model) footerView() string {
 		return instructionsStyle.Render(
 			keyStyle.Render("> ") + model.search.View(),
 		)
-
 	}
 
 	if model.showFooter {
-		helper =
-			labelStyle.Render("Navigate") + " " +
-				keyStyle.Render("↑/↓ j/k") + "    " +
-				labelStyle.Render("Scroll") + " " +
-				keyStyle.Render("Ctrl+D/U") + "    " +
-				labelStyle.Render("Select") + " " +
-				keyStyle.Render("Enter") + "    " +
-				labelStyle.Render("Back") + " " +
-				keyStyle.Render("b/Esc") + "    " +
-				labelStyle.Render("Quit") + " " +
-				keyStyle.Render("q") +  "    " +
-				labelStyle.Render("Search") + " " +
-				keyStyle.Render("/ ") + "	"
-			}
+		if model.screen == MenuScreen {
+			helper =
+				labelStyle.Render("Navigate") + " " +
+					keyStyle.Render("↑/↓ j/k") + "    " +
+					labelStyle.Render("Select") + " " +
+					keyStyle.Render("Enter") + "    " +
+					labelStyle.Render("Back") + " " +
+					keyStyle.Render("b/Esc") + "    " +
+					labelStyle.Render("Quit") + " " +
+					keyStyle.Render("q") + "    "
+		}
+		if model.screen == AboutScreen {
+			helper =
+				labelStyle.Render("Navigate") + " " +
+					keyStyle.Render("↑/↓ j/k") + "    " +
+					labelStyle.Render("Scroll") + " " +
+					keyStyle.Render("Ctrl+D/U") + "    " +
+					labelStyle.Render("Select") + " " +
+					keyStyle.Render("Enter") + "    " +
+					labelStyle.Render("Back") + " " +
+					keyStyle.Render("b/Esc") + "    " +
+					labelStyle.Render("Quit") + " " +
+					keyStyle.Render("q") + "    " +
+					labelStyle.Render("Search") + " " +
+					keyStyle.Render("/ ") + "	"
+		}
+		if model.screen == ProjectScreen {
+			helper =
+				labelStyle.Render("Navigate") + " " +
+					keyStyle.Render("↑/↓ j/k") + "    " +
+					labelStyle.Render("Select") + " " +
+					keyStyle.Render("Enter") + "    " +
+					labelStyle.Render("Back") + " " +
+					keyStyle.Render("b/Esc") + "    " +
+					labelStyle.Render("Quit") + " " +
+					keyStyle.Render("q") + "    " +
+					labelStyle.Render("Search") + " " +
+					keyStyle.Render("/ ") + "	"
+		}
+	}
 
 	return instructionsStyle.Render(
 		helper +
@@ -57,7 +82,7 @@ func (model Model) footerView() string {
 	)
 }
 
-// headerView that takes in a string 
+// headerView that takes in a string
 // adjusts to the width of the users terminal
 // returns with headerStyle
 func (model Model) headerView(header string) string {
