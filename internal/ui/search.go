@@ -90,6 +90,8 @@ func (model Model) searchableLines() []ContentLine {
 	switch model.screen {
 	case AboutScreen:
 		return model.aboutLines()
+	case ProjectScreen:
+		return model.projectLines()
 
 	// TODO: More Screen cases
 

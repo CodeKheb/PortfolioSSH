@@ -70,6 +70,8 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 
 			default:
 				model.search, cmd = model.search.Update(message)
+				model.viewport.SetContent(model.ProjectView())
+
 				model.searchProjects()
 				return model, cmd
 			}
@@ -97,6 +99,7 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 
 		case "/":
 			model.searching = true
+			model.search.Reset()
 			model.search.Focus()
 			return model, textinput.Blink
 		case "?":
