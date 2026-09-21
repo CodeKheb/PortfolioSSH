@@ -90,6 +90,8 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 			}
 		case "esc", "b":
 			model.screen = MenuScreen
+			model.selected = 0
+			return model, nil
 		case "q":
 			return model, tea.Quit
 
@@ -126,10 +128,12 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 	case "enter":
 		switch model.selected {
 		case 0:
+			model.selected = 0
 			model.screen = AboutScreen
 			model.viewport.SetContent(model.aboutContent())
 			model.viewport.GotoTop()
 		case 1:
+			model.selected = 0
 			model.screen = ProjectScreen
 			model.updateContent()
 			model.viewport.GotoTop()
