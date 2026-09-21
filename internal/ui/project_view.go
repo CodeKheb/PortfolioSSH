@@ -47,7 +47,8 @@ var projectItems = []Project{
 		Title:      "OrderUp",
 		Technology: "JavaFX, FXGL",
 		Description: `
-		A 2D restaurant management game built with FXGL (JavaFX) that visualizes CPU scheduling algorithms through a restaurant.
+		A 2D restaurant management game built with FXGL (JavaFX) 
+		that visualizes CPU scheduling algorithms through a restaurant.
 		Customers arrive as processes with Arrival Time (AT) and Burst Time (BT), 
 		simulating a First Come First Serve (FCFS) scheduling algorithm.
 		The game also includes a rhythm minigame where players click to serve customers at the right time.
