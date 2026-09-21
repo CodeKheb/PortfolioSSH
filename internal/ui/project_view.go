@@ -118,7 +118,7 @@ func (model Model) projectContent() string {
 func (model Model) ProjectView() string {
 	header := model.headerView("PROJECTS")
 
-	return model.layoutWithHeader(
+	return model.layout(
 		header,
 		model.renderLines(model.projectLines()),
 	)

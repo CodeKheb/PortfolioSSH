@@ -74,7 +74,7 @@ func (model Model) menuLines() []ContentLine {
 func (model Model) MenuView() string {
 	header := model.headerView("Kherbin's Portfolio")
 
-	return model.layoutWithHeader(
+	return model.layout(
 		header,
 		model.renderLines(model.menuLines()),
 	)

@@ -2,29 +2,8 @@ package ui
 
 import "github.com/charmbracelet/lipgloss"
 
-// overall layout, gets called in different view
-func (model Model) layout(content string) string {
-	footer := model.footerView()
-
-	footerHeight := lipgloss.Height(footer)
-
-	contentHeight := model.height - footerHeight
-
-	body := lipgloss.NewStyle().
-		Width(model.width).
-		Height(contentHeight).
-		Padding(1, 2).
-		Render(content)
-
-	return lipgloss.JoinVertical(
-		lipgloss.Left,
-		body,
-		footer,
-	)
-}
-
-// layout with header
-func (model Model) layoutWithHeader(header, content string) string {
+// overall layout of everything
+func (model Model) layout(header, content string) string {
 	footer := model.footerView()
 
 	footerHeight := lipgloss.Height(footer)

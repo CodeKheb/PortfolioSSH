@@ -189,7 +189,7 @@ func (model Model) AboutView() string {
 		MarginLeft(leftMargin).
 		Render(model.viewport.View())
 
-	return model.layoutWithHeader(
+	return model.layout(
 		header,
 		content,
 	)
