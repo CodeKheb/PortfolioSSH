@@ -156,9 +156,25 @@ func (model *Model) nextSearchMatch() {
 	}
 
 	match := model.searchMatches[model.searchIndex]
+	query := strings.TrimSpace(model.search.Value())
 
 	// projects screen
 	if model.screen == ProjectScreen {
+		for i, project := range projectItems {
+
+			searchable := strings.ToLower(
+				project.Title + " " +
+					project.Technology + " " +
+					project.Description,
+			)
+
+			if strings.Contains(searchable, query) {
+				model.searchMatches = append(
+					model.searchMatches,
+					i,
+				)
+			}
+		}
 		model.selected = match
 		model.updateContent()
 		return
@@ -181,9 +197,25 @@ func (model *Model) previousSearchMatch() {
 	}
 
 	match := model.searchMatches[model.searchIndex]
+	query := strings.TrimSpace(model.search.Value())
 
 	// projects screen
 	if model.screen == ProjectScreen {
+		for i, project := range projectItems {
+
+			searchable := strings.ToLower(
+				project.Title + " " +
+					project.Technology + " " +
+					project.Description,
+			)
+
+			if strings.Contains(searchable, query) {
+				model.searchMatches = append(
+					model.searchMatches,
+					i,
+				)
+			}
+		}
 		model.selected = match
 		model.updateContent()
 		return

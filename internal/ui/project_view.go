@@ -20,6 +20,33 @@ var projectItems = []Project{
 		Technology:  "Node.js, OAuth2, Express.js",
 		Description: "DevKada Hackathon",
 	},
+	{
+		Title:      "ESPresso",
+		Technology: "ESP32, Tauri v2 (Rust), TypeScript, React",
+		Description: `
+		Tauri 2 + React + TypeScript desktop app for sharing coffee profiles over any
+		local network. **The WiFi is the DNS** — every device with ESPresso open hosts
+		a pot, and pots on the same network find each other automatically via mDNS.`,
+	},
+	{
+		Title:      "typetest_TUI",
+		Technology: "Go, Bubbletea, Lipgloss",
+		Description: `
+		A terminal-based typing speed test written in Go, using
+		[Bubbletea](https://github.com/charmbracelet/bubbletea) and
+		[Lipgloss](https://github.com/charmbracelet/lipgloss) for the UI.
+		`,
+	},
+	{
+		Title:      "OrderUp",
+		Technology: "JavaFX, FXGL",
+		Description: `
+		A 2D restaurant management game built with FXGL (JavaFX) that visualizes CPU scheduling algorithms through a restaurant.
+		Customers arrive as processes with Arrival Time (AT) and Burst Time (BT), 
+		simulating a First Come First Serve (FCFS) scheduling algorithm.
+		The game also includes a rhythm minigame where players click to serve customers at the right time.
+		`,
+	},
 
 	// TODO: ADD MORE PROJECTS
 }
