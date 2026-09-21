@@ -68,12 +68,7 @@ var projectItems = []Project{
 }
 
 func (model Model) projectLines() []ContentLine {
-	lines := []ContentLine{
-		{
-			Text:  "Projects",
-			Style: titleStyle,
-		},
-	}
+	lines := []ContentLine{}
 
 	lines = append(lines, ContentLine{
 		Text: "\n",
@@ -121,7 +116,10 @@ func (model Model) projectContent() string {
 }
 
 func (model Model) ProjectView() string {
-	return model.layout(
+	header := model.headerView("PROJECTS")
+
+	return model.layoutWithHeader(
+		header,
 		model.renderLines(model.projectLines()),
 	)
 }

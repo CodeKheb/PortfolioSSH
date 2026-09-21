@@ -30,8 +30,6 @@ var menuItems = []MenuItems{
 func (model Model) menuLines() []ContentLine {
 	lines := []ContentLine{
 		{
-			Text:  "Kherbin's Portfolio",
-			Style: titleStyle,
 		},
 	}
 
@@ -74,7 +72,10 @@ func (model Model) menuLines() []ContentLine {
 
 // The first ui the user sees, contains the navigation
 func (model Model) MenuView() string {
-	return model.layout(
+	header := model.headerView("Kherbin's Portfolio")
+
+	return model.layoutWithHeader(
+		header,
 		model.renderLines(model.menuLines()),
 	)
 }
