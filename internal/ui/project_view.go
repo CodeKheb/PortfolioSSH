@@ -16,8 +16,8 @@ var projectItems = []Project{
 		Description: "Portfolio larp",
 	},
 	{
-		Title:       "CodeShare",
-		Technology:  "Node.js, OAuth2, Express.js",
+		Title:      "CodeShare",
+		Technology: "Node.js, OAuth2, Express.js",
 		Description: `
 		DevKada Hackathon
 		CodeShare unifies real-time team chat with live GitHub integration. 
@@ -55,7 +55,7 @@ var projectItems = []Project{
 		`,
 	},
 	{
-		Title: "dotfiles",
+		Title:      "dotfiles",
 		Technology: "Neovim, Linux, Lua, Bash",
 		Description: `
 		Personal Linux configuration files, 
@@ -87,6 +87,9 @@ func (model Model) projectLines() []ContentLine {
 					Style: descriptionStyle,
 				},
 				ContentLine{
+					Text: "\n",
+				},
+				ContentLine{
 					Text:  "Description:",
 					Style: descriptionStyle,
 				},
@@ -101,6 +104,9 @@ func (model Model) projectLines() []ContentLine {
 				ContentLine{
 					Text:  "  " + project.Title,
 					Style: itemStyle,
+				},
+				ContentLine{
+					Text: "\n",
 				},
 			)
 		}

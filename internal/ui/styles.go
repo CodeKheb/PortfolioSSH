@@ -48,6 +48,7 @@ var (
 			Padding(0, 4)
 
 	itemStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#A9B1D6")).
 			PaddingLeft(2)
 
 	selectedItemStyle = lipgloss.NewStyle().
@@ -56,7 +57,7 @@ var (
 				Foreground(lipgloss.Color("#7D56F4"))
 
 	descriptionStyle = lipgloss.NewStyle().
-				Foreground(lipgloss.Color("#777777")).
+				Foreground(lipgloss.Color("#FFFFFF")).
 				PaddingLeft(4)
 
 	instructionsStyle = lipgloss.NewStyle().
