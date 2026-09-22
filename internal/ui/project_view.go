@@ -1,5 +1,9 @@
 package ui
 
+import (
+	"strings"
+)
+
 type Project struct {
 	Title       string
 	Technology  string
@@ -76,7 +80,10 @@ func (model Model) projectLines() []ContentLine {
 
 	for i, project := range projectItems {
 		if i == model.selected {
+			description := parseLine(project.Description)
+
 			lines = append(
+
 				lines,
 				ContentLine{
 					Text:  "> " + project.Title,
@@ -87,14 +94,11 @@ func (model Model) projectLines() []ContentLine {
 					Style: descriptionStyle,
 				},
 				ContentLine{
-					Text: "\n",
-				},
-				ContentLine{
-					Text:  "Description:",
+					Text:  "",
 					Style: descriptionStyle,
 				},
 				ContentLine{
-					Text:  project.Description,
+					Text:  description,
 					Style: descriptionStyle,
 				},
 			)
@@ -128,4 +132,14 @@ func (model Model) ProjectView() string {
 		header,
 		model.renderLines(model.projectLines()),
 	)
+}
+
+func parseLine(line string) string {
+	lines := strings.Split(strings.TrimSpace(line), "\n")
+
+	for i := range lines {
+		lines[i] = strings.TrimSpace(lines[i])
+	}
+
+	return strings.Join(lines, "\n")
 }

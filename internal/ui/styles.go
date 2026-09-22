@@ -12,6 +12,7 @@ var (
 	RED      = lipgloss.Color("#F7768E")
 	WHITE    = lipgloss.Color("#FFFFFF")
 	CREAM    = lipgloss.Color("#FFFDF5")
+	TEXT     = lipgloss.Color("#C0CAF5")
 	MUTED    = lipgloss.Color("#A9B1D6")
 	DIM      = lipgloss.Color("#565F89")
 	DARK     = lipgloss.Color("#1A1B26")
@@ -62,7 +63,7 @@ var (
 			Padding(0, 4)
 
 	itemStyle = lipgloss.NewStyle().
-			Foreground(MUTED).
+			Foreground(WHITE).
 			PaddingLeft(2)
 
 	selectedItemStyle = lipgloss.NewStyle().
@@ -71,7 +72,7 @@ var (
 				Foreground(PURPLE)
 
 	descriptionStyle = lipgloss.NewStyle().
-				Foreground(WHITE).
+				Foreground(TEXT).
 				PaddingLeft(4)
 
 	instructionsStyle = lipgloss.NewStyle().
