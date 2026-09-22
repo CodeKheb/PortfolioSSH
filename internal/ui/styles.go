@@ -4,6 +4,20 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
+// colors
+var (
+	BLUE     = lipgloss.Color("#2D7DFF")
+	PURPLE   = lipgloss.Color("#7D56F4")
+	GREEN    = lipgloss.Color("#73DACA")
+	RED      = lipgloss.Color("#F7768E")
+	WHITE    = lipgloss.Color("#FFFFFF")
+	CREAM    = lipgloss.Color("#FFFDF5")
+	MUTED    = lipgloss.Color("#A9B1D6")
+	DIM      = lipgloss.Color("#565F89")
+	DARK     = lipgloss.Color("#1A1B26")
+	LAVENDER = lipgloss.Color("#BB9AF7")
+)
+
 // lipgloss style variables
 var (
 	appStyle = lipgloss.NewStyle().
@@ -11,70 +25,70 @@ var (
 
 	headerStyle = lipgloss.NewStyle().
 			Bold(true).
-			Foreground(lipgloss.Color("#1A1B26")).
-			Background(lipgloss.Color("#7D56F4")).
+			Foreground(DARK).
+			Background(PURPLE).
 			Padding(1, 2)
 
 	// About page
 	nameStyle = lipgloss.NewStyle().
 			Bold(true).
-			Foreground(lipgloss.Color("#2D7DFF")).
+			Foreground(BLUE).
 			MarginBottom(1)
 
 	sectionStyle = lipgloss.NewStyle().
 			Bold(true).
-			Foreground(lipgloss.Color("#BB9AF7")).
+			Foreground(LAVENDER).
 			MarginTop(1).
 			MarginBottom(1)
 
 	subheadingStyle = lipgloss.NewStyle().
 			Bold(true).
-			Foreground(lipgloss.Color("#73DACA"))
+			Foreground(GREEN)
 
 	bulletStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#F7768E"))
+			Foreground(RED)
 
 	mutedStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#A9B1D6"))
+			Foreground(MUTED)
 
 	bodyStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#FFFFFF"))
+			Foreground(WHITE)
 
 	// Menu Style
 	titleStyle = lipgloss.NewStyle().
 			Bold(true).
-			Foreground(lipgloss.Color("#FFFDF5")).
-			Background(lipgloss.Color("#7D56F4")).
+			Foreground(CREAM).
+			Background(PURPLE).
 			Padding(0, 4)
 
 	itemStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#A9B1D6")).
+			Foreground(MUTED).
 			PaddingLeft(2)
 
 	selectedItemStyle = lipgloss.NewStyle().
 				PaddingLeft(2).
 				Bold(true).
-				Foreground(lipgloss.Color("#7D56F4"))
+				Foreground(PURPLE)
 
 	descriptionStyle = lipgloss.NewStyle().
-				Foreground(lipgloss.Color("#FFFFFF")).
+				Foreground(WHITE).
 				PaddingLeft(4)
 
 	instructionsStyle = lipgloss.NewStyle().
-				Foreground(lipgloss.Color("#565F89")).
+				Foreground(DIM).
 				Padding(2, 4)
 
 	// Search
 	searchHighlightStyle = lipgloss.NewStyle().
-				Background(lipgloss.Color("#2D7DFF")).
-				Foreground(lipgloss.Color("#FFFFFF")).
+				Background(BLUE).
+				Foreground(WHITE).
 				Bold(true)
 
 	// Footer Style
 	keyStyle = lipgloss.NewStyle().
 			Bold(true).
-			Foreground(lipgloss.Color("#2D7DFF"))
+			Foreground(BLUE)
 
 	labelStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#A9B1D6"))
+			Foreground(MUTED)
 )
