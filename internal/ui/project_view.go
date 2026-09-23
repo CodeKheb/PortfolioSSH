@@ -2,6 +2,11 @@ package ui
 
 import (
 	"strings"
+
+	"github.com/charmbracelet/lipgloss"
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/ast"
+	"github.com/yuin/goldmark/text"
 )
 
 type Project struct {
@@ -10,8 +15,9 @@ type Project struct {
 	Description string
 	RepoURL     string
 	README      string
-	// TODO: Add more larp here
 }
+
+var markdownParser = goldmark.New()
 
 var projectItems = []Project{
 	{
@@ -148,4 +154,98 @@ func parseLine(line string) string {
 	}
 
 	return strings.Join(lines, "\n")
+}
+
+func parseREADME(markdown string) []ContentLine {
+	source := []byte(markdown)
+
+	reader := text.NewReader(source)
+	docs := markdownParser.Parser().Parse(reader)
+
+	var lines []ContentLine
+
+	for node := docs.FirstChild(); node != nil; node = node.NextSibling() {
+		switch node.Kind() {
+
+		case ast.KindHeading:
+			heading := node.(*ast.Heading)
+
+			lines = append(lines, ContentLine{
+				Text:  string(nodeText(source, heading)),
+				Style: sectionStyle,
+			})
+
+		case ast.KindParagraph:
+			lines = append(lines, ContentLine{
+				Text:  string(nodeText(source, node)),
+				Style: bodyStyle,
+			})
+
+		case ast.KindList:
+			for child := node.FirstChild(); child != nil; child = child.NextSibling() {
+				if child.Kind() != ast.KindListItem {
+					continue
+				}
+				lines = append(lines, ContentLine{
+					Text:  "• " + string(nodeText(source, child)),
+					Style: bodyStyle,
+				})
+			}
+			lines = append(lines, ContentLine{
+				Text:  "",
+				Style: bodyStyle,
+			})
+		}
+	}
+	return lines
+}
+
+func nodeText(source []byte, node ast.Node) []byte {
+	var builder strings.Builder
+
+	ast.Walk(node, func(n ast.Node, entering bool) (ast.WalkStatus, error) {
+		if !entering {
+			return ast.WalkContinue, nil
+		}
+
+		if textNode, ok := n.(*ast.Text); ok {
+			builder.Write(textNode.Segment.Value(source))
+		}
+
+		return ast.WalkContinue, nil
+	})
+	return []byte(builder.String())
+}
+
+func (model Model) READMEView() string {
+	project := projectItems[model.selected]
+
+	header := model.headerView("PROJECT: " + project.Title)
+
+	content := lipgloss.NewStyle().
+		Render(model.viewport.View())
+
+	return model.layout(
+		header,
+		content,
+	)
+}
+
+func (model Model) readmeLines() []ContentLine {
+	project := projectItems[model.selected]
+
+	if project.README == "" {
+		return []ContentLine{
+			{
+				Text:  "I'm lazy and did not write a README for this yet",
+				Style: mutedStyle,
+			},
+		}
+	}
+
+	return parseREADME(project.README)
+}
+
+func (model Model) readmeContent() string {
+	return model.renderLines(model.readmeLines())
 }

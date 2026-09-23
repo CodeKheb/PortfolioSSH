@@ -110,7 +110,11 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 		case "N":
 			model.previousSearchMatch()
 			return model, nil
-
+		case "enter":
+			model.screen = READMEScreen
+			model.viewport.SetContent(model.readmeContent())
+			model.viewport.GotoTop()
+			return model, nil
 		}
 
 		return model, nil

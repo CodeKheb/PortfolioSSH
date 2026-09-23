@@ -19,6 +19,7 @@ const (
 	MenuScreen Screen = iota
 	AboutScreen
 	ProjectScreen
+	READMEScreen
 )
 
 // The Model struct, here is what the bubbletea func render
@@ -77,6 +78,8 @@ func (model Model) View() string {
 		return model.AboutView()
 	case ProjectScreen:
 		return model.ProjectView()
+	case READMEScreen:
+		return model.READMEView()
 	default:
 		return model.MenuView()
 	}
