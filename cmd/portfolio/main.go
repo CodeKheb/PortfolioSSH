@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
 	sshserver "github.com/CodeKheb/PortfolioSSH/internal/ssh"
+	"github.com/CodeKheb/PortfolioSSH/internal/ui"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/muesli/termenv"
 )
@@ -13,6 +15,8 @@ import (
 // starts the lipgloss UI
 func main() {
 	lipgloss.SetColorProfile(termenv.TrueColor)
+	go ui.PollREADME(5 * time.Minute)
+
 	server, err := sshserver.MainServer()
 	if err != nil {
 		log.Fatal(err)
@@ -23,14 +27,4 @@ func main() {
 	if err := server.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}
-
-//	program := tea.NewProgram(
-//		ui.ViewportModel(),
-//		tea.WithAltScreen(),
-//	)
-//	if _, err := program.Run()
-//
-//	err != nil {
-//		fmt.Print(err)
-//	}
 }

@@ -15,9 +15,10 @@ type Project struct {
 
 var projectItems = []Project{
 	{
-		Title:       "ProjectSSH",
+		Title:       "Portfolio",
 		Technology:  "Go, Terraform, GCP, SSH",
 		Description: "Portfolio larp",
+		RepoURL:     "https://github.com/CodeKheb/PortfolioSSH",
 	},
 	{
 		Title:      "CodeShare",
@@ -29,6 +30,7 @@ var projectItems = []Project{
 		and release instantly surfaces as a system message right where your team is already talking. 
 		No notifications to miss. No context to lose. One conversation. Everything you need.
 		`,
+		RepoURL: "https://github.com/CodeKheb/HelloWorld-CodeShare",
 	},
 	{
 		Title:      "ESPresso",
@@ -37,6 +39,7 @@ var projectItems = []Project{
 		Tauri 2 + React + TypeScript desktop app for sharing coffee profiles over any
 		local network. **The WiFi is the DNS** — every device with ESPresso open hosts
 		a pot, and pots on the same network find each other automatically via mDNS.`,
+		RepoURL: "https://github.com/CodeKheb/ESPresso",
 	},
 	{
 		Title:      "typetest_TUI",
@@ -46,6 +49,7 @@ var projectItems = []Project{
 		[Bubbletea](https://github.com/charmbracelet/bubbletea) and
 		[Lipgloss](https://github.com/charmbracelet/lipgloss) for the UI.
 		`,
+		RepoURL: "https://github.com/CodeKheb/typetest_TUI",
 	},
 	{
 		Title:      "OrderUp",
@@ -57,6 +61,7 @@ var projectItems = []Project{
 		simulating a First Come First Serve (FCFS) scheduling algorithm.
 		The game also includes a rhythm minigame where players click to serve customers at the right time.
 		`,
+		RepoURL: "https://github.com/CodeKheb/OrderUp",
 	},
 	{
 		Title:      "dotfiles",
@@ -66,6 +71,7 @@ var projectItems = []Project{
 		built around an Arch-based setup with Neovim as the primary editor, 
 		a Sway (Wayland) desktop, and a set of rofi-powered launcher scripts.
 		`,
+		RepoURL: "https://github.com/CodeKheb/dotfiles",
 	},
 
 	// TODO: ADD MORE PROJECTS

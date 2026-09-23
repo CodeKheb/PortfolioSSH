@@ -134,7 +134,9 @@ func (model Model) aboutLines() []ContentLine {
 		{"Systems Programming and Embedded", subheadingStyle},
 		{"    • C", bodyStyle},
 		{"    • Rust", bodyStyle},
+		{"    • Arduino", bodyStyle},
 		{"    • ESP32", bodyStyle},
+		{"    • ESP8266", bodyStyle},
 		{"", bodyStyle},
 
 		{"Scripting and Automation", subheadingStyle},
