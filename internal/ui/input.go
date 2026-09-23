@@ -70,7 +70,9 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 
 			default:
 				model.search, cmd = model.search.Update(message)
-				// TODO: README SEARCH
+
+				model.viewport.SetContent(model.readmeContent())
+				model.searchContent()
 				return model, cmd
 			}
 
@@ -78,7 +80,7 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 		}
 		switch message.String() {
 		case "esc", "b":
-			model.screen = ProjectScreen 
+			model.screen = ProjectScreen
 
 		case "q":
 			return model, tea.Quit
@@ -95,6 +97,7 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 			model.showFooter = !model.showFooter
 		case "/":
 			model.searching = true
+			model.search.Reset()
 			model.search.Focus()
 			return model, textinput.Blink
 		case "n":
@@ -161,6 +164,11 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 			return model, nil
 		case "enter":
 			model.screen = READMEScreen
+
+			model.searching = false
+			model.search.Reset()
+			model.search.Blur()
+
 			model.viewport.SetContent(model.readmeContent())
 			model.viewport.GotoTop()
 			return model, nil

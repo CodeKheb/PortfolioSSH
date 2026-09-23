@@ -92,6 +92,8 @@ func (model Model) searchableLines() []ContentLine {
 		return model.aboutLines()
 	case ProjectScreen:
 		return model.projectLines()
+	case READMEScreen:
+		return model.readmeLines()
 
 	// TODO: More Screen cases
 
@@ -149,19 +151,14 @@ func (model *Model) nextSearchMatch() {
 		return
 	}
 
-	// jump next match
-	model.searchIndex++
-
-	// if already last, go back
-	if model.searchIndex >= len(model.searchMatches) {
-		model.searchIndex = 0
-	}
-
 	match := model.searchMatches[model.searchIndex]
-	query := strings.TrimSpace(model.search.Value())
 
 	// projects screen
 	if model.screen == ProjectScreen {
+		query := strings.ToLower(strings.TrimSpace(model.search.Value()))
+
+		var matches []int
+
 		for i, project := range projectItems {
 
 			searchable := strings.ToLower(
@@ -171,15 +168,33 @@ func (model *Model) nextSearchMatch() {
 			)
 
 			if strings.Contains(searchable, query) {
-				model.searchMatches = append(
-					model.searchMatches,
-					i,
-				)
+				matches = append(matches, i)
 			}
 		}
-		model.selected = match
+
+		if len(matches) == 0 {
+			return
+		}
+
+		model.searchMatches = matches
+
+		model.searchIndex++
+
+		if model.searchIndex >= len(model.searchMatches) {
+			model.searchIndex = 0
+		}
+
+		model.selected = model.searchMatches[model.searchIndex]
 		model.updateContent()
 		return
+	}
+
+	// jump next match
+	model.searchIndex++
+
+	// if already last, go back
+	if model.searchIndex >= len(model.searchMatches) {
+		model.searchIndex = 0
 	}
 
 	model.viewport.SetYOffset(match)
@@ -192,17 +207,14 @@ func (model *Model) previousSearchMatch() {
 		return
 	}
 
-	model.searchIndex--
-
-	if model.searchIndex < 0 {
-		model.searchIndex = len(model.searchMatches) - 1
-	}
-
 	match := model.searchMatches[model.searchIndex]
-	query := strings.TrimSpace(model.search.Value())
 
 	// projects screen
 	if model.screen == ProjectScreen {
+		query := strings.ToLower(strings.TrimSpace(model.search.Value()))
+
+		var matches []int
+
 		for i, project := range projectItems {
 
 			searchable := strings.ToLower(
@@ -212,15 +224,30 @@ func (model *Model) previousSearchMatch() {
 			)
 
 			if strings.Contains(searchable, query) {
-				model.searchMatches = append(
-					model.searchMatches,
-					i,
-				)
+				matches = append(matches, i)
 			}
 		}
-		model.selected = match
+
+		if len(matches) == 0 {
+			return
+		}
+
+		model.searchMatches = matches
+		model.searchIndex--
+
+		if model.searchIndex < 0 {
+			model.searchIndex = len(model.searchMatches) - 1
+		}
+
+		model.selected = model.searchMatches[model.searchIndex]
 		model.updateContent()
 		return
+	}
+
+	model.searchIndex--
+
+	if model.searchIndex < 0 {
+		model.searchIndex = len(model.searchMatches) - 1
 	}
 
 	model.viewport.SetYOffset(match)
@@ -276,6 +303,10 @@ func (model *Model) updateContent() {
 	case ProjectScreen:
 		model.viewport.SetContent(
 			model.renderLines(model.projectLines()),
+		)
+	case READMEScreen:
+		model.viewport.SetContent(
+			model.renderLines(model.readmeLines()),
 		)
 
 		// TODO: Add more screens
