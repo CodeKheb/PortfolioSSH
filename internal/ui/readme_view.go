@@ -114,39 +114,78 @@ func parseCodeBlock(source []byte, node ast.Node, lines *[]ContentLine) {
 }
 
 func parseTable(source []byte, node *extast.Table, lines *[]ContentLine) {
-	for child := node.FirstChild(); child != nil; child = child.NextSibling() {
-		switch row := child.(type) {
-		case *extast.TableHeader:
-			parseTableRow(source, row, lines, true)
+	var rows [][]string
 
-		case *extast.TableRow:
-			parseTableRow(source, row, lines, false)
+	for child := node.FirstChild(); child != nil; child = child.NextSibling() {
+		var cells []string
+
+		for cell := child.FirstChild(); cell != nil; cell = cell.NextSibling() {
+			cells = append(cells, strings.TrimSpace(
+				nodeText(source, cell),
+			))
+		}
+
+		if len(cells) > 0 {
+			rows = append(rows, cells)
 		}
 	}
+
+	parseTableRow(rows, lines)
 }
 
-func parseTableRow(source []byte, row ast.Node, lines *[]ContentLine, header bool) {
-	var cells []string
+func parseTableRow(rows [][]string, lines *[]ContentLine) {
+	if len(rows) == 0 {
+		return
+	}
 
-	for cell := row.FirstChild(); cell != nil; cell = cell.NextSibling() {
-		if cell.Kind() != extast.KindTableCell {
-			continue
+	columnCount := 0
+	for _, row := range rows {
+		if len(row) > columnCount {
+			columnCount = len(row)
+		}
+	}
+
+	widths := make([]int, columnCount)
+
+	for _, row := range rows {
+		for i, cell := range row {
+			width := lipgloss.Width(cell)
+
+			if width > widths[i] {
+				widths[i] = width
+			}
+		}
+	}
+
+	for rowIndex, row := range rows {
+		var cells []string
+
+		for i := 0; i < columnCount; i++ {
+			cell := ""
+
+			if i < len(row) {
+				cell = row[i]
+			}
+
+			padding := widths[i] - lipgloss.Width(cell)
+
+			cells = append(
+				cells,
+				cell+strings.Repeat(" ", padding),
+			)
 		}
 
-		cells = append(cells, strings.TrimSpace(
-			nodeText(source, cell),
-		))
-	}
+		style := bodyStyle
 
-	style := bodyStyle
-	if header {
-		style = subheadingStyle
-	}
+		if rowIndex == 0 {
+			style = subheadingStyle
+		}
 
-	*lines = append(*lines, ContentLine{
-		Text:  strings.Join(cells, " │ "),
-		Style: style,
-	})
+		*lines = append(*lines, ContentLine{
+			Text:  strings.Join(cells, " │ "),
+			Style: style,
+		})
+	}
 }
 
 func (model Model) READMEView() string {
