@@ -49,6 +49,10 @@ var (
 	bulletStyle = lipgloss.NewStyle().
 			Foreground(RED)
 
+	codeStyle = lipgloss.NewStyle().
+			Foreground(MUTED).
+			PaddingLeft(2)
+
 	mutedStyle = lipgloss.NewStyle().
 			Foreground(MUTED)
 

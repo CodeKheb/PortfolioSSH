@@ -6,6 +6,8 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/ast"
+	"github.com/yuin/goldmark/extension"
+	extast "github.com/yuin/goldmark/extension/ast"
 	"github.com/yuin/goldmark/text"
 )
 
@@ -17,7 +19,11 @@ type Project struct {
 	README      string
 }
 
-var markdownParser = goldmark.New()
+var markdownParser = goldmark.New(
+	goldmark.WithExtensions(
+		extension.GFM,
+	),
+)
 
 var projectItems = []Project{
 	{
@@ -182,25 +188,34 @@ func parseREADME(markdown string) []ContentLine {
 			})
 
 		case ast.KindList:
-			for child := node.FirstChild(); child != nil; child = child.NextSibling() {
-				if child.Kind() != ast.KindListItem {
-					continue
-				}
-				lines = append(lines, ContentLine{
-					Text:  "• " + string(nodeText(source, child)),
-					Style: bodyStyle,
-				})
-			}
+			parseList(source, node, &lines)
+
+		case ast.KindFencedCodeBlock:
+			parseCodeBlock(source, node, &lines)
+
+		case extast.KindTable:
+			parseTable(source, node.(*extast.Table), &lines)
+
+		case ast.KindThematicBreak:
 			lines = append(lines, ContentLine{
-				Text:  "",
-				Style: bodyStyle,
+				Text:  "────────────────────────────────",
+				Style: mutedStyle,
 			})
+		case ast.KindHTMLBlock:
+			continue
+
+		case ast.KindRawHTML:
+			continue
 		}
+		lines = append(lines, ContentLine{
+			Text:  "",
+			Style: bodyStyle,
+		})
 	}
 	return lines
 }
 
-func nodeText(source []byte, node ast.Node) []byte {
+func nodeText(source []byte, node ast.Node) string {
 	var builder strings.Builder
 
 	ast.Walk(node, func(n ast.Node, entering bool) (ast.WalkStatus, error) {
@@ -214,7 +229,69 @@ func nodeText(source []byte, node ast.Node) []byte {
 
 		return ast.WalkContinue, nil
 	})
-	return []byte(builder.String())
+	return builder.String()
+}
+
+func parseList(source []byte, node ast.Node, lines *[]ContentLine) {
+	for child := node.FirstChild(); child != nil; child = child.NextSibling() {
+		if child.Kind() != ast.KindListItem {
+			continue
+		}
+
+		*lines = append(*lines, ContentLine{
+			Text:  "• " + nodeText(source, child),
+			Style: bodyStyle,
+		})
+	}
+}
+
+func parseCodeBlock(source []byte, node ast.Node, lines *[]ContentLine) {
+	codeBlock := node.(*ast.FencedCodeBlock)
+
+	for i := 0; i < codeBlock.Lines().Len(); i++ {
+		line := codeBlock.Lines().At(i)
+
+		*lines = append(*lines, ContentLine{
+			Text:  string(line.Value(source)),
+			Style: codeStyle,
+		})
+	}
+}
+
+func parseTable(source []byte, node *extast.Table, lines *[]ContentLine) {
+	for child := node.FirstChild(); child != nil; child = child.NextSibling() {
+		switch row := child.(type) {
+		case *extast.TableHeader:
+			parseTableRow(source, row, lines, true)
+
+		case *extast.TableRow:
+			parseTableRow(source, row, lines, false)
+		}
+	}
+}
+
+func parseTableRow(source []byte, row ast.Node, lines *[]ContentLine, header bool) {
+	var cells []string
+
+	for cell := row.FirstChild(); cell != nil; cell = cell.NextSibling() {
+		if cell.Kind() != extast.KindTableCell {
+			continue
+		}
+
+		cells = append(cells, strings.TrimSpace(
+			nodeText(source, cell),
+		))
+	}
+
+	style := bodyStyle
+	if header {
+		style = subheadingStyle
+	}
+
+	*lines = append(*lines, ContentLine{
+		Text:  strings.Join(cells, " │ "),
+		Style: style,
+	})
 }
 
 func (model Model) READMEView() string {
