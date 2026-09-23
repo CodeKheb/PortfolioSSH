@@ -45,3 +45,4 @@ Thumbs.db
 # Host Keys
 host_key
 host_key.pub
+.docker-data/

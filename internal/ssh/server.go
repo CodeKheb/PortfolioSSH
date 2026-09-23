@@ -2,6 +2,7 @@ package ssh
 
 import (
 	"fmt"
+	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
 	gossh "github.com/charmbracelet/ssh"
@@ -11,10 +12,18 @@ import (
 	"github.com/CodeKheb/PortfolioSSH/internal/ui"
 )
 
+func env(key, fallback string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+
+	return fallback
+}
+
 func MainServer() (*gossh.Server, error) {
 	server, err := wish.NewServer(
-		wish.WithAddress("localhost:42069"),
-		wish.WithHostKeyPath("host_key"),
+		wish.WithAddress(env("SSH_ADDRESS", ":42069")),
+		wish.WithHostKeyPath(env("SSH_HOST_KEY", "./.docker-data/host_key")),
 
 		wish.WithMiddleware(
 			wishbubbletea.Middleware(
@@ -27,7 +36,7 @@ func MainServer() (*gossh.Server, error) {
 		),
 	)
 	if err != nil {
-		return nil, fmt.Errorf("Err: %w", err)
+		return nil, fmt.Errorf("create server: %w", err)
 	}
 	return server, nil
 }

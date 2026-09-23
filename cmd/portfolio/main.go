@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	sshserver "github.com/CodeKheb/PortfolioSSH/internal/ssh"
@@ -13,6 +14,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Print("CONNECTED!!")
 
 	if err := server.ListenAndServe(); err != nil {
 		log.Fatal(err)
