@@ -59,6 +59,55 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 		return model, nil
 	}
 
+	if model.screen == READMEScreen {
+		var cmd tea.Cmd
+
+		if model.searching {
+			switch message.String() {
+			case "esc", "enter":
+				model.searching = false
+				model.search.Blur()
+
+			default:
+				model.search, cmd = model.search.Update(message)
+				// TODO: README SEARCH
+				return model, cmd
+			}
+
+			return model, nil
+		}
+		switch message.String() {
+		case "esc", "b":
+			model.screen = ProjectScreen 
+
+		case "q":
+			return model, tea.Quit
+		case "j", "down":
+			model.viewport.ScrollDown(1)
+		case "ctrl+d":
+			model.viewport.HalfPageDown()
+
+		case "k", "up":
+			model.viewport.ScrollUp(1)
+		case "ctrl+u":
+			model.viewport.HalfPageUp()
+		case "?":
+			model.showFooter = !model.showFooter
+		case "/":
+			model.searching = true
+			model.search.Focus()
+			return model, textinput.Blink
+		case "n":
+			model.nextSearchMatch()
+			return model, nil
+		case "N":
+			model.previousSearchMatch()
+			return model, nil
+		}
+
+		return model, nil
+	}
+
 	if model.screen == ProjectScreen {
 		var cmd tea.Cmd
 
