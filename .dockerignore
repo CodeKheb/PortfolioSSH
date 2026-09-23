@@ -1,0 +1,10 @@
+.docker-data/
+.git/
+terraform/
+*.tfstate
+*.tfstate.*
+.terraform/
+.env
+.env.*
+host_key
+host_key.pub
