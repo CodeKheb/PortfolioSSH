@@ -52,8 +52,6 @@ func (model Model) footerView() string {
 					keyStyle.Render("↑/↓ j/k") + "    " +
 					labelStyle.Render("Scroll") + " " +
 					keyStyle.Render("Ctrl+D/U") + "    " +
-					labelStyle.Render("Select") + " " +
-					keyStyle.Render("Enter") + "    " +
 					labelStyle.Render("Back") + " " +
 					keyStyle.Render("b/Esc") + "    " +
 					labelStyle.Render("Quit") + " " +
@@ -67,6 +65,19 @@ func (model Model) footerView() string {
 					keyStyle.Render("↑/↓ j/k") + "    " +
 					labelStyle.Render("Select") + " " +
 					keyStyle.Render("Enter") + "    " +
+					labelStyle.Render("Back") + " " +
+					keyStyle.Render("b/Esc") + "    " +
+					labelStyle.Render("Quit") + " " +
+					keyStyle.Render("q") + "    " +
+					labelStyle.Render("Search") + " " +
+					keyStyle.Render("/ ") + "	"
+		}
+		if model.screen == READMEScreen {
+			helper =
+				labelStyle.Render("Navigate") + " " +
+					keyStyle.Render("↑/↓ j/k") + "    " +
+					labelStyle.Render("Scroll") + " " +
+					keyStyle.Render("Ctrl+D/U") + "    " +
 					labelStyle.Render("Back") + " " +
 					keyStyle.Render("b/Esc") + "    " +
 					labelStyle.Render("Quit") + " " +
