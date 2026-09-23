@@ -1,0 +1,14 @@
+services:
+  portfolio:
+    build: .
+    container_name: portfolio-ssh
+    restart: unless-stopped
+    ports:
+      - "42069:42069"
+    environment:
+      SSH_ADDRESS: ":42069"
+      SSH_HOST_KEY: "/data/host_key"
+    volumes:
+      - ./.docker-data/host_key:/data/host_key:ro
+    security_opt:
+      - no-new-privileges:true
