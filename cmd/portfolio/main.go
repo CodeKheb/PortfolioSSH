@@ -5,11 +5,14 @@ import (
 	"log"
 
 	sshserver "github.com/CodeKheb/PortfolioSSH/internal/ssh"
+	"github.com/charmbracelet/lipgloss"
+	"github.com/muesli/termenv"
 )
 
 // Main program
 // starts the lipgloss UI
 func main() {
+	lipgloss.SetColorProfile(termenv.TrueColor)
 	server, err := sshserver.MainServer()
 	if err != nil {
 		log.Fatal(err)
