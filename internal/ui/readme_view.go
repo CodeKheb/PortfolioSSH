@@ -53,8 +53,12 @@ func parseREADME(markdown string) []ContentLine {
 
 		case ast.KindThematicBreak:
 			lines = append(lines, ContentLine{
-				Text:  "────────────────────────────────",
-				Style: mutedStyle,
+				Text: "────────────────────────────────────────────────────────────────────────────────────────────────" +
+					"────────────────────────────────────────────────────────────────────────────────────────────────" +
+					"────────────────────────────────────────────────────────────────────────────────────────────────" +
+					"────────────────────────────────────────────────────────────────────────────────────────────────",
+				Style:  mutedStyle,
+				NoWrap: true,
 			})
 		case ast.KindHTMLBlock:
 			continue
@@ -182,8 +186,9 @@ func parseTableRow(rows [][]string, lines *[]ContentLine) {
 		}
 
 		*lines = append(*lines, ContentLine{
-			Text:  strings.Join(cells, " │ "),
-			Style: style,
+			Text:   strings.Join(cells, " │ "),
+			Style:  style,
+			NoWrap: true,
 		})
 	}
 }
@@ -219,4 +224,13 @@ func (model Model) readmeLines() []ContentLine {
 
 func (model Model) readmeContent() string {
 	return model.renderLines(model.readmeLines())
+}
+
+func wrapLine(text string, width int) []string {
+	return strings.Split(
+		lipgloss.NewStyle().
+			Width(width).
+			Render(text),
+		"\n",
+	)
 }

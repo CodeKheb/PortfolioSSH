@@ -56,18 +56,38 @@ func (model Model) Update(message tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		model.width = msg.Width
 		model.height = msg.Height
-		headerHeight := lipgloss.Height(model.headerView(" "))
+
+		var header string
+
+		switch model.screen {
+		case MenuScreen:
+			header = model.headerView("Kherbin's Portfolio")
+		case AboutScreen:
+			header = model.headerView("ABOUT  KHERBIN BUENAVENTURA")
+		case ProjectScreen:
+			header = model.headerView("PROJECTS")
+		case READMEScreen:
+			project := projectItems[model.selected]
+			header = model.headerView("PROJECT: " + project.Title)
+		}
+
+		headerHeight := lipgloss.Height(header)
 		footerHeight := lipgloss.Height(model.footerView())
 
 		model.viewport.Width = msg.Width
-		model.viewport.Height = msg.Height - headerHeight - footerHeight
+		model.viewport.Height = max(
+			0,
+			msg.Height-headerHeight-footerHeight,
+		)
+
+		model.updateContent()
 
 		return model, nil
 
 	case tea.KeyMsg:
 		return model.keyHandler(msg)
-	}
 
+	}
 	return model, nil
 }
 

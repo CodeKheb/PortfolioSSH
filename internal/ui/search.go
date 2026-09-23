@@ -10,8 +10,9 @@ import (
 // Style contains a set of rules that comprise a style as a whole
 // gets called as an array and called by {currentScreen}Line() functions
 type ContentLine struct {
-	Text  string
-	Style lipgloss.Style
+	Text   string
+	Style  lipgloss.Style
+	NoWrap bool
 }
 
 // render the Lines
@@ -25,8 +26,21 @@ func (model Model) renderLines(lines []ContentLine) string {
 	for i, line := range lines {
 		// highlights the line that is searched
 		text := highlightSearch(line.Text, query)
-		builder.WriteString(line.Style.Render(text))
 
+		if line.NoWrap {
+			builder.WriteString(line.Style.Render(text))
+		} else {
+			wrapped := wrapLine(text, model.width)
+
+			for j, wrappedLine := range wrapped {
+				builder.WriteString(line.Style.Render(wrappedLine))
+
+				if j < len(wrapped)-1 {
+					builder.WriteString("\n")
+				}
+
+			}
+		}
 		// add a new line in between lines
 		if i < len(lines)-1 {
 			builder.WriteString("\n")
@@ -295,11 +309,14 @@ func (model *Model) searchProjects() {
 
 func (model *Model) updateContent() {
 	switch model.screen {
+	case MenuScreen:
+		model.viewport.SetContent(
+			model.renderLines(model.menuLines()),
+		)
 	case AboutScreen:
 		model.viewport.SetContent(
 			model.renderLines(model.aboutLines()),
 		)
-
 	case ProjectScreen:
 		model.viewport.SetContent(
 			model.renderLines(model.projectLines()),
