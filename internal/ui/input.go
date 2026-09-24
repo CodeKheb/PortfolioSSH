@@ -136,11 +136,13 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 			if model.selected > 0 {
 				model.selected--
 				model.updateContent()
+				model.viewport.ScrollUp(1)
 			}
 		case "j", "down":
 			if model.selected < len(projectItems)-1 {
 				model.selected++
 				model.updateContent()
+				model.viewport.ScrollDown(1)
 			}
 		case "esc", "b":
 			model.screen = MenuScreen

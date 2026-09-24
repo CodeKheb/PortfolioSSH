@@ -200,6 +200,7 @@ func (model *Model) nextSearchMatch() {
 
 		model.selected = model.searchMatches[model.searchIndex]
 		model.updateContent()
+		model.viewport.ScrollDown(1)
 		return
 	}
 
@@ -255,6 +256,7 @@ func (model *Model) previousSearchMatch() {
 
 		model.selected = model.searchMatches[model.searchIndex]
 		model.updateContent()
+		model.viewport.ScrollUp(1)
 		return
 	}
 

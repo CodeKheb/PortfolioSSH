@@ -135,7 +135,7 @@ func (model Model) ProjectView() string {
 
 	return model.layout(
 		header,
-		model.renderLines(model.projectLines()),
+		model.viewport.View(),
 	)
 }
 
