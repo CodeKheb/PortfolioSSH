@@ -1,6 +1,6 @@
 services:
   portfolio:
-    build: .
+    image: ghcr.io/codekheb/portfoliossh:${IMAGE_TAG}
     container_name: portfolio-ssh
     restart: unless-stopped
     ports:
