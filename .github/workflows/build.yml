@@ -26,11 +26,14 @@ jobs:
 
       - name: Build image
         run: |
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}:${GITHUB_SHA}"
+      
           docker build \
-            -t ghcr.io/${{ github.repository }}:${{ github.sha }} \
+            -t "$IMAGE" \
             .
-
+      
       - name: Push image
         run: |
-          docker push \
-            ghcr.io/${{ github.repository }}:${{ github.sha }}
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}:${GITHUB_SHA}"
+      
+          docker push "$IMAGE"
