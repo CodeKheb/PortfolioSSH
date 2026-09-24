@@ -18,6 +18,10 @@ var menuItems = []MenuItems{
 		Title:       "Contact",
 		Description: "CodeKheb",
 	},
+	{
+		Title:       "TEST DEPLOY",
+		Description: "THIS IS A TEST IF CI/CD WORKS",
+	},
 }
 
 // TODO: Make menuLines
