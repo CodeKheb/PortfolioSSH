@@ -19,8 +19,9 @@ func main() {
 	go ui.PollREADME(5 * time.Minute)
 
 	go func() {
+		log.Println("Starting metrics server on :8080")
 		if err := metrics.Start(":8080"); err != nil {
-			log.Fatal(err)
+			log.Fatal("metrics server %w", err)
 		}
 	}()
 
