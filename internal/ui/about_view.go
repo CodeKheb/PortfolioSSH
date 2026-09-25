@@ -8,10 +8,6 @@ import (
 func (model Model) aboutLines() []ContentLine {
 	return []ContentLine{
 		// Identity
-		{Text: "ITS: Java Certification", Style: subheadingStyle},
-		{Text: "April 2026", Style: mutedStyle},
-		{Text: "", Style: bodyStyle},
-		{Text: "", Style: bodyStyle},
 		{Text: "", Style: bodyStyle},
 		{Text: "", Style: bodyStyle},
 		{Text: "Kherbin Clloyde Buenaventura", Style: nameStyle},
@@ -187,9 +183,13 @@ func (model Model) aboutLines() []ContentLine {
 		{Text: "IC3 Digital Literacy Certification - Level 1", Style: subheadingStyle},
 		{Text: "October 2025", Style: mutedStyle},
 		{Text: "", Style: bodyStyle},
+
+		{Text: "ITS: Java Certification", Style: subheadingStyle},
+		{Text: "April 2026", Style: mutedStyle},
+		{Text: "", Style: bodyStyle},
+		{Text: "", Style: bodyStyle},
 	}
 }
-
 
 // aboutContent calls aboutLines and pass it to renderLines() inside search.go
 func (model Model) aboutContent() string {
