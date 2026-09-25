@@ -24,5 +24,17 @@ services:
       - prometheus-data:/prometheus
     restart: unless-stopped
 
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
 volumes:
   prometheus-data:
+  grafana-data:
