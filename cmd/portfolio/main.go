@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/CodeKheb/PortfolioSSH/internal/metrics"
 	sshserver "github.com/CodeKheb/PortfolioSSH/internal/ssh"
 	"github.com/CodeKheb/PortfolioSSH/internal/ui"
 	"github.com/charmbracelet/lipgloss"
@@ -16,6 +17,12 @@ import (
 func main() {
 	lipgloss.SetColorProfile(termenv.TrueColor)
 	go ui.PollREADME(5 * time.Minute)
+
+	go func() {
+		if err := metrics.Start(":8080"); err != nil {
+			log.Fatal(err)
+		}
+	}()
 
 	server, err := sshserver.MainServer()
 	if err != nil {

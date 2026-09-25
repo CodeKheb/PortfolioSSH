@@ -9,6 +9,7 @@ import (
 	"github.com/charmbracelet/wish"
 	wishbubbletea "github.com/charmbracelet/wish/bubbletea"
 
+	"github.com/CodeKheb/PortfolioSSH/internal/metrics"
 	"github.com/CodeKheb/PortfolioSSH/internal/ui"
 )
 
@@ -28,6 +29,8 @@ func MainServer() (*gossh.Server, error) {
 		wish.WithMiddleware(
 			wishbubbletea.Middleware(
 				func(session gossh.Session) (tea.Model, []tea.ProgramOption) {
+					metrics.Sessions.Inc()
+
 					return ui.ViewportModel(), []tea.ProgramOption{
 						tea.WithAltScreen(),
 					}
