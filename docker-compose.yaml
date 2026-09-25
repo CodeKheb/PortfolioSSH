@@ -29,6 +29,9 @@ services:
     depends_on:
       - prometheus
     restart: unless-stopped
+    environment:
+      GF_SERVER_ROOT_URL: "http://${PUBLIC_IP}/"
+      GF_SERVER_DOMAIN: "${PUBLIC_IP}"
 
   node-exporter:
     image: prom/node-exporter:latest
