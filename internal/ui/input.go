@@ -81,6 +81,8 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 		switch message.String() {
 		case "esc", "b":
 			model.screen = ProjectScreen
+			model.viewport.SetContent(model.projectContent())
+			model.viewport.GotoTop()
 
 		case "q":
 			return model, tea.Quit
