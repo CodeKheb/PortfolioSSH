@@ -26,19 +26,23 @@ func (model Model) contactLines() []ContentLine {
 	lines := []ContentLine{}
 
 	lines = append(lines, ContentLine{
-		Text: contactItems[0].Name,
+		Text: "\n\n\n",
 		Style: selectedItemStyle,
 	})
 	lines = append(lines, ContentLine{
-		Text: contactItems[0].Email,
+		Text: " " + contactItems[0].Name,
 		Style: selectedItemStyle,
 	})
 	lines = append(lines, ContentLine{
-		Text: contactItems[0].LinkedIn,
+		Text: " " + contactItems[0].Email,
 		Style: selectedItemStyle,
 	})
 	lines = append(lines, ContentLine{
-		Text: contactItems[0].GitHub,
+		Text: " " + contactItems[0].LinkedIn,
+		Style: selectedItemStyle,
+	})
+	lines = append(lines, ContentLine{
+		Text: " " + contactItems[0].GitHub,
 		Style: selectedItemStyle,
 	})
 

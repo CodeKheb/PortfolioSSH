@@ -19,6 +19,7 @@ const (
 	MenuScreen Screen = iota
 	AboutScreen
 	ProjectScreen
+	ContactScreen
 	READMEScreen
 )
 
@@ -100,6 +101,8 @@ func (model Model) View() string {
 		return model.ProjectView()
 	case READMEScreen:
 		return model.READMEView()
+	case ContactScreen:
+		return model.ContactView()
 	default:
 		return model.MenuView()
 	}

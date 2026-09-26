@@ -179,6 +179,19 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 		return model, nil
 	}
 
+	if model.screen == ContactScreen {
+		switch message.String() {
+		case "q":
+			return model, tea.Quit
+		case "esc", "b":
+			model.screen = MenuScreen
+			model.selected = 0
+			return model, nil
+
+		}
+		return model, nil
+	}
+
 	switch message.String() {
 	case "q":
 		return model, tea.Quit
@@ -202,6 +215,11 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 			model.selected = 0
 			model.screen = ProjectScreen
 			model.updateContent()
+			model.viewport.GotoTop()
+		case 2:
+			model.selected = 0
+			model.screen = ContactScreen
+			model.viewport.SetContent(model.contactContent())
 			model.viewport.GotoTop()
 		}
 	case "?":
