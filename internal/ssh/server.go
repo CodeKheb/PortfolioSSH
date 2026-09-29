@@ -9,6 +9,7 @@ import (
 	"github.com/charmbracelet/wish"
 	wishbubbletea "github.com/charmbracelet/wish/bubbletea"
 
+	"github.com/CodeKheb/PortfolioSSH/internal/database"
 	"github.com/CodeKheb/PortfolioSSH/internal/metrics"
 	"github.com/CodeKheb/PortfolioSSH/internal/ui"
 )
@@ -21,7 +22,7 @@ func env(key, fallback string) string {
 	return fallback
 }
 
-func MainServer() (*gossh.Server, error) {
+func MainServer(database *database.Database) (*gossh.Server, error) {
 	server, err := wish.NewServer(
 		wish.WithAddress(env("SSH_ADDRESS", ":42069")),
 		wish.WithHostKeyPath(env("SSH_HOST_KEY", "./.docker-data/host_key")),

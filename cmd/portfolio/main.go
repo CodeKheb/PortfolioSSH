@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"time"
 
+	"github.com/CodeKheb/PortfolioSSH/internal/database"
 	"github.com/CodeKheb/PortfolioSSH/internal/metrics"
 	sshserver "github.com/CodeKheb/PortfolioSSH/internal/ssh"
 	"github.com/CodeKheb/PortfolioSSH/internal/ui"
@@ -16,6 +18,19 @@ import (
 // starts the lipgloss UI
 func main() {
 	lipgloss.SetColorProfile(termenv.TrueColor)
+
+	databasePath := os.Getenv("DATABASE_PATH")
+
+	if databasePath == "" {
+		databasePath = "./messages.db"
+	}
+
+	db, err := database.Open(databasePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
 	go ui.PollREADME(5 * time.Minute)
 
 	go func() {
@@ -25,7 +40,7 @@ func main() {
 		}
 	}()
 
-	server, err := sshserver.MainServer()
+	server, err := sshserver.MainServer(db)
 	if err != nil {
 		log.Fatal(err)
 	}

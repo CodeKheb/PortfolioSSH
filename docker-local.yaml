@@ -8,9 +8,11 @@ services:
       - "8080:8080"
     environment:
       SSH_ADDRESS: ":42069"
-      SSH_HOST_KEY: "/data/host_key"
+      SSH_HOST_KEY: "/keys/host_key"
+      DATABASE_PATH: "/data/messages.db"
     volumes:
-      - ./.docker-data/host_key:/data/host_key:ro
+      - ./.docker-data/host_key:/keys/host_key:ro
+      - portfolio-data:/data
     security_opt:
       - no-new-privileges:true
 
@@ -58,3 +60,4 @@ services:
 volumes:
   prometheus-data:
   grafana-data:
+  portfolio-data:
