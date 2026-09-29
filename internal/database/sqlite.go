@@ -28,6 +28,11 @@ func Open(path string) (*Database, error) {
 
 	database := &Database{connection: connection}
 
+	if _, err := connection.Exec("PRAGMA journal_mode=WAL;"); err != nil {
+		connection.Close()
+		return nil, fmt.Errorf("enable WAL: %w", err)
+	}
+
 	if err := database.createTables(); err != nil {
 		connection.Close()
 		return nil, err
