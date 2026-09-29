@@ -112,6 +112,11 @@ func (model Model) submitMessage() Model {
 		return model
 	}
 
+	if !model.limiter.Allow(model.clientIP) {
+		model.contactError = "Please wait before sending another message."
+		return model
+	}
+
 	err := model.db.SaveMessage(
 		name,
 		email,

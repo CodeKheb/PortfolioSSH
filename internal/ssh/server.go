@@ -2,6 +2,7 @@ package ssh
 
 import (
 	"fmt"
+	"net"
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -11,6 +12,7 @@ import (
 
 	"github.com/CodeKheb/PortfolioSSH/internal/database"
 	"github.com/CodeKheb/PortfolioSSH/internal/metrics"
+	"github.com/CodeKheb/PortfolioSSH/internal/ratelimiter"
 	"github.com/CodeKheb/PortfolioSSH/internal/ui"
 )
 
@@ -22,7 +24,7 @@ func env(key, fallback string) string {
 	return fallback
 }
 
-func MainServer(database *database.Database) (*gossh.Server, error) {
+func MainServer(database *database.Database, limiter *ratelimiter.Limiter) (*gossh.Server, error) {
 	server, err := wish.NewServer(
 		wish.WithAddress(env("SSH_ADDRESS", ":42069")),
 		wish.WithHostKeyPath(env("SSH_HOST_KEY", "./.docker-data/host_key")),
@@ -32,7 +34,11 @@ func MainServer(database *database.Database) (*gossh.Server, error) {
 				func(session gossh.Session) (tea.Model, []tea.ProgramOption) {
 					metrics.Sessions.Inc()
 
-					return ui.ViewportModel(database), []tea.ProgramOption{
+					host, _, err := net.SplitHostPort(session.RemoteAddr().String())
+					if err != nil {
+						host = session.RemoteAddr().String()
+					}
+					return ui.ViewportModel(database, limiter, host), []tea.ProgramOption{
 						tea.WithAltScreen(),
 					}
 				},

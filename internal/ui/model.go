@@ -7,6 +7,7 @@ package ui
 
 import (
 	"github.com/CodeKheb/PortfolioSSH/internal/database"
+	"github.com/CodeKheb/PortfolioSSH/internal/ratelimiter"
 	"github.com/charmbracelet/bubbles/textarea"
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/viewport"
@@ -42,7 +43,10 @@ type Model struct {
 
 	showFooter bool
 
-	db             *database.Database
+	db       *database.Database
+	limiter  *ratelimiter.Limiter
+	clientIP string
+
 	contactName    textinput.Model
 	contactEmail   textinput.Model
 	contactMessage textarea.Model
@@ -122,7 +126,11 @@ func (model Model) View() string {
 
 // ViewportModel gets called in main.go
 // Initializes everything
-func ViewportModel(db *database.Database) Model {
+func ViewportModel(
+	db *database.Database,
+	limiter *ratelimiter.Limiter,
+	clientIP string,
+) Model {
 	vp := viewport.New(0, 0)
 
 	input := textinput.New()
@@ -146,7 +154,10 @@ func ViewportModel(db *database.Database) Model {
 		viewport:   vp,
 		search:     input,
 		showFooter: true,
+
 		db:         db,
+		limiter: limiter,
+		clientIP: clientIP,
 
 		contactName:    name,
 		contactEmail:   email,

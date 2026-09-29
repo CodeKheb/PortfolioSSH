@@ -8,6 +8,7 @@ import (
 
 	"github.com/CodeKheb/PortfolioSSH/internal/database"
 	"github.com/CodeKheb/PortfolioSSH/internal/metrics"
+	"github.com/CodeKheb/PortfolioSSH/internal/ratelimiter"
 	sshserver "github.com/CodeKheb/PortfolioSSH/internal/ssh"
 	"github.com/CodeKheb/PortfolioSSH/internal/ui"
 	"github.com/charmbracelet/lipgloss"
@@ -40,7 +41,9 @@ func main() {
 		}
 	}()
 
-	server, err := sshserver.MainServer(db)
+	limiter := ratelimiter.New(5 * time.Minute)
+
+	server, err := sshserver.MainServer(db, limiter)
 	if err != nil {
 		log.Fatal(err)
 	}
