@@ -7,7 +7,6 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-
 type Contact struct {
 	Name     string
 	Email    string
@@ -16,27 +15,57 @@ type Contact struct {
 }
 
 func (model Model) contactContent() string {
+	nameLabel := contactLabelStyle.Render("Name")
+	emailLabel := contactLabelStyle.Render("Email")
+	messageLabel := contactLabelStyle.Render("Message")
+
+	if model.contactField == 0 {
+		nameLabel = contactFocusedLabelStyle.Render("Name")
+	}
+
+	if model.contactField == 1 {
+		emailLabel = contactFocusedLabelStyle.Render("Email")
+	}
+
+	if model.contactField == 2 {
+		messageLabel = contactFocusedLabelStyle.Render("Message")
+	}
+
+	indicator := func(field int) string {
+		if model.contactField == field {
+			return contactIndicatorStyle.Render("> ")
+		}
+
+		return "  "
+	}
+
+	sendButton := contactButtonStyle.Render("[ Send Message ]")
+
+	if model.contactField == 3 {
+		sendButton = contactFocusedButtonStyle.Render("> [ Send Message ]")
+	}
+
 	content := []string{
-		"Name",
-		model.contactName.View(),
+		indicator(0) + nameLabel,
+		"  " + model.contactName.View(),
 
 		"",
-		"Email",
-		model.contactEmail.View(),
+		indicator(1) + emailLabel,
+		"  " + model.contactEmail.View(),
 
 		"",
-		"Message",
-		model.contactMessage.View(),
+		indicator(2) + messageLabel,
+		"  " + model.contactMessage.View(),
 
 		"",
-		"[ Send Message ]",
+		"  " + sendButton,
 	}
 
 	if model.contactError != "" {
 		content = append(
 			content,
 			"",
-			model.contactError,
+			contactErrorStyle.Render(model.contactError),
 		)
 	}
 
@@ -44,7 +73,7 @@ func (model Model) contactContent() string {
 		content = append(
 			content,
 			"",
-			"Kheb appreciates the message.",
+			contactSuccessStyle.Render("Thank u for da rose"),
 		)
 	}
 
@@ -131,6 +160,7 @@ func (model Model) contactKeyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 		}
 
 		model.focusContactField()
+		model.viewport.SetContent(model.contactContent())
 		return model, nil
 
 	case "shift+tab":
@@ -141,6 +171,7 @@ func (model Model) contactKeyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 		}
 
 		model.focusContactField()
+		model.viewport.SetContent(model.contactContent())
 		return model, nil
 
 	case "enter":

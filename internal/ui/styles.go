@@ -96,4 +96,31 @@ var (
 
 	labelStyle = lipgloss.NewStyle().
 			Foreground(MUTED)
+
+		// Contact Style
+	contactLabelStyle = lipgloss.NewStyle().
+				Foreground(MUTED)
+
+	contactFocusedLabelStyle = lipgloss.NewStyle().
+					Foreground(LAVENDER).
+					Bold(true)
+
+	contactIndicatorStyle = lipgloss.NewStyle().
+				Foreground(MUTED).
+				Bold(true)
+
+	contactButtonStyle = lipgloss.NewStyle().
+				Foreground(MUTED).
+				Padding(0, 1)
+
+	contactFocusedButtonStyle = lipgloss.NewStyle().
+					Foreground(LAVENDER).
+					Bold(true).
+					Padding(0, 1)
+
+	contactErrorStyle = lipgloss.NewStyle().
+				Foreground(RED)
+
+	contactSuccessStyle = lipgloss.NewStyle().
+				Foreground(GREEN)
 )
