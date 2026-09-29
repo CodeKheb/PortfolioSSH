@@ -46,3 +46,8 @@ Thumbs.db
 host_key
 host_key.pub
 .docker-data/
+
+# Database
+*.db
+*.db-wal
+*.db-shm
