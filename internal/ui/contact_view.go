@@ -13,12 +13,12 @@ type Contact struct {
 	GitHub   string
 }
 
-var contactItems = []Contact {
+var contactItems = []Contact{
 	{
-		Name: "Kherbin Clloyde Buenaventura",
-		Email: "kherbinbuenaventura@gmail.com",
+		Name:     "Kherbin Clloyde Buenaventura",
+		Email:    "kherbinbuenaventura@gmail.com",
 		LinkedIn: "https://www.linkedin.com/in/kherbin-clloyde-buenaventura-875414401/",
-		GitHub: "https://github.com/CodeKheb",
+		GitHub:   "https://github.com/CodeKheb",
 	},
 }
 
@@ -26,32 +26,31 @@ func (model Model) contactLines() []ContentLine {
 	lines := []ContentLine{}
 
 	lines = append(lines, ContentLine{
-		Text: "\n\n\n",
+		Text:  "\n\n\n",
 		Style: selectedItemStyle,
 	})
 	lines = append(lines, ContentLine{
-		Text: " " + contactItems[0].Name,
+		Text:  " " + contactItems[0].Name,
 		Style: selectedItemStyle,
 	})
 	lines = append(lines, ContentLine{
-		Text: " " + contactItems[0].Email,
+		Text:  " " + contactItems[0].Email,
 		Style: selectedItemStyle,
 	})
 	lines = append(lines, ContentLine{
-		Text: " " + contactItems[0].LinkedIn,
+		Text:  " " + contactItems[0].LinkedIn,
 		Style: selectedItemStyle,
 	})
 	lines = append(lines, ContentLine{
-		Text: " " + contactItems[0].GitHub,
+		Text:  " " + contactItems[0].GitHub,
 		Style: selectedItemStyle,
 	})
 
 	return lines
-
 }
 
 func (model Model) contactContent() string {
-	return  model.renderLines(model.contactLines())
+	return model.renderLines(model.contactLines())
 }
 
 func (model Model) ContactView() string {
