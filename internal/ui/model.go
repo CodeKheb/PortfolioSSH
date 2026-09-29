@@ -6,6 +6,8 @@ package ui
 */
 
 import (
+	"github.com/CodeKheb/PortfolioSSH/internal/database"
+	"github.com/charmbracelet/bubbles/textarea"
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
@@ -39,6 +41,14 @@ type Model struct {
 	searching     bool
 
 	showFooter bool
+
+	db             *database.Database
+	contactName    textinput.Model
+	contactEmail   textinput.Model
+	contactMessage textarea.Model
+	contactError   string
+	contactSuccess bool
+	contactField   int
 }
 
 // Initialize tea
@@ -70,6 +80,8 @@ func (model Model) Update(message tea.Msg) (tea.Model, tea.Cmd) {
 		case READMEScreen:
 			project := projectItems[model.selected]
 			header = model.headerView("PROJECT: " + project.Title)
+		case ContactScreen:
+			header = model.headerView("CONTACT")
 		}
 
 		headerHeight := lipgloss.Height(header)
@@ -110,7 +122,7 @@ func (model Model) View() string {
 
 // ViewportModel gets called in main.go
 // Initializes everything
-func ViewportModel() Model {
+func ViewportModel(db *database.Database) Model {
 	vp := viewport.New(0, 0)
 
 	input := textinput.New()
@@ -118,9 +130,27 @@ func ViewportModel() Model {
 	input.CharLimit = 100
 	input.Prompt = ""
 
+	name := textinput.New()
+	name.Placeholder = "Your name"
+	name.CharLimit = 100
+
+	email := textinput.New()
+	email.Placeholder = "you@example.com"
+	email.CharLimit = 254
+
+	message := textarea.New()
+	message.Placeholder = "Your message..."
+	message.CharLimit = 2000
+
 	return Model{
 		viewport:   vp,
 		search:     input,
 		showFooter: true,
+		db:         db,
+
+		contactName:    name,
+		contactEmail:   email,
+		contactMessage: message,
+		contactField:   0,
 	}
 }

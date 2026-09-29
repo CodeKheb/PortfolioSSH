@@ -327,7 +327,9 @@ func (model *Model) updateContent() {
 		model.viewport.SetContent(
 			model.renderLines(model.readmeLines()),
 		)
-
-		// TODO: Add more screens
+	case ContactScreen:
+		model.viewport.SetContent(
+			model.contactContent(),
+		)
 	}
 }

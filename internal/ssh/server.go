@@ -32,7 +32,7 @@ func MainServer(database *database.Database) (*gossh.Server, error) {
 				func(session gossh.Session) (tea.Model, []tea.ProgramOption) {
 					metrics.Sessions.Inc()
 
-					return ui.ViewportModel(), []tea.ProgramOption{
+					return ui.ViewportModel(database), []tea.ProgramOption{
 						tea.WithAltScreen(),
 					}
 				},
