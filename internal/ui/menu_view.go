@@ -16,7 +16,7 @@ var menuItems = []MenuItems{
 	},
 	{
 		Title:       "Contact",
-		Description: "CodeKheb",
+		Description: "Send me a message",
 	},
 }
 
