@@ -180,6 +180,12 @@ func (model Model) contactKeyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 		return model, nil
 
 	case "enter":
+		if model.contactField < 2 {
+			model.contactField++
+			model.focusContactField()
+			model.viewport.SetContent(model.contactContent())
+			return model, nil
+		}
 		if model.contactField == 3 {
 			model = model.submitMessage()
 			model.viewport.SetContent(model.contactContent())
