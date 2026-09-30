@@ -47,18 +47,26 @@ func (model Model) contactContent() string {
 
 	content := []string{
 		indicator(0) + nameLabel,
-		"  " + model.contactName.View(),
+		lipgloss.NewStyle().
+			PaddingLeft(2).
+			Render(model.contactName.View()),
 
 		"",
 		indicator(1) + emailLabel,
-		"  " + model.contactEmail.View(),
+		lipgloss.NewStyle().
+			PaddingLeft(2).
+			Render(model.contactEmail.View()),
 
 		"",
 		indicator(2) + messageLabel,
-		"  " + model.contactMessage.View(),
+		lipgloss.NewStyle().
+			PaddingLeft(2).
+			Render(model.contactMessage.View()),
 
 		"",
-		"  " + sendButton,
+		lipgloss.NewStyle().
+			PaddingLeft(2).
+			Render(sendButton),
 	}
 
 	if model.contactError != "" {
@@ -77,9 +85,17 @@ func (model Model) contactContent() string {
 		)
 	}
 
-	return lipgloss.JoinVertical(
+	centered := lipgloss.JoinVertical(
 		lipgloss.Left,
 		content...,
+	)
+
+	return lipgloss.Place(
+		model.viewport.Width,
+		model.viewport.Height,
+		lipgloss.Center,
+		lipgloss.Center,
+		centered,
 	)
 }
 
