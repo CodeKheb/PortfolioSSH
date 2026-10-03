@@ -7,6 +7,7 @@ package ui
 
 import (
 	"github.com/CodeKheb/PortfolioSSH/internal/database"
+	"github.com/CodeKheb/PortfolioSSH/internal/notifier"
 	"github.com/CodeKheb/PortfolioSSH/internal/ratelimiter"
 	"github.com/charmbracelet/bubbles/textarea"
 	"github.com/charmbracelet/bubbles/textinput"
@@ -45,6 +46,7 @@ type Model struct {
 
 	db       *database.Database
 	limiter  *ratelimiter.Limiter
+	telegram *notifier.Telegram
 	clientIP string
 
 	contactName    textinput.Model
@@ -129,6 +131,7 @@ func (model Model) View() string {
 func ViewportModel(
 	db *database.Database,
 	limiter *ratelimiter.Limiter,
+	telegram *notifier.Telegram,
 	clientIP string,
 ) Model {
 	vp := viewport.New(0, 0)
@@ -158,6 +161,7 @@ func ViewportModel(
 		db:         db,
 		limiter: limiter,
 		clientIP: clientIP,
+		telegram: telegram,
 
 		contactName:    name,
 		contactEmail:   email,

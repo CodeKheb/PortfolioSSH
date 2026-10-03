@@ -4,14 +4,17 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/CodeKheb/PortfolioSSH/internal/database"
 	"github.com/CodeKheb/PortfolioSSH/internal/metrics"
+	"github.com/CodeKheb/PortfolioSSH/internal/notifier"
 	"github.com/CodeKheb/PortfolioSSH/internal/ratelimiter"
 	sshserver "github.com/CodeKheb/PortfolioSSH/internal/ssh"
 	"github.com/CodeKheb/PortfolioSSH/internal/ui"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/joho/godotenv"
 	"github.com/muesli/termenv"
 )
 
@@ -19,6 +22,10 @@ import (
 // starts the lipgloss UI
 func main() {
 	lipgloss.SetColorProfile(termenv.TrueColor)
+
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env")
+	}
 
 	databasePath := os.Getenv("DATABASE_PATH")
 
@@ -43,7 +50,15 @@ func main() {
 
 	limiter := ratelimiter.New(5 * time.Minute)
 
-	server, err := sshserver.MainServer(db, limiter)
+	telegramToken := strings.TrimSpace(os.Getenv("TELEGRAM_BOT_TOKEN"))
+	telegramChatID := strings.TrimSpace(os.Getenv("TELEGRAM_CHAT_ID"))
+
+	telegram := notifier.NewTelegram(
+		telegramToken,
+		telegramChatID,
+	)
+
+	server, err := sshserver.MainServer(db, limiter, telegram)
 	if err != nil {
 		log.Fatal(err)
 	}

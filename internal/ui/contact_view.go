@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"log"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -141,6 +142,10 @@ func (model Model) submitMessage() Model {
 	if err != nil {
 		model.contactError = err.Error()
 		return model
+	}
+
+	if err := model.telegram.SendMessage(name, email, message); err != nil {
+		log.Printf("Telegram notification failed: %v", err)
 	}
 
 	model.contactSuccess = true

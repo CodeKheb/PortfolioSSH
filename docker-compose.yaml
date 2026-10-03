@@ -9,6 +9,8 @@ services:
       SSH_ADDRESS: ":42069"
       SSH_HOST_KEY: "/keys/host_key"
       DATABASE_PATH: "/data/messages.db"
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
     volumes:
       - ./.docker-data/host_key:/keys/host_key:ro
       - portfolio-data:/data

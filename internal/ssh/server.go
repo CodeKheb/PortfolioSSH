@@ -12,6 +12,7 @@ import (
 
 	"github.com/CodeKheb/PortfolioSSH/internal/database"
 	"github.com/CodeKheb/PortfolioSSH/internal/metrics"
+	"github.com/CodeKheb/PortfolioSSH/internal/notifier"
 	"github.com/CodeKheb/PortfolioSSH/internal/ratelimiter"
 	"github.com/CodeKheb/PortfolioSSH/internal/ui"
 )
@@ -24,7 +25,7 @@ func env(key, fallback string) string {
 	return fallback
 }
 
-func MainServer(database *database.Database, limiter *ratelimiter.Limiter) (*gossh.Server, error) {
+func MainServer(database *database.Database, limiter *ratelimiter.Limiter, telegram *notifier.Telegram) (*gossh.Server, error) {
 	server, err := wish.NewServer(
 		wish.WithAddress(env("SSH_ADDRESS", ":42069")),
 		wish.WithHostKeyPath(env("SSH_HOST_KEY", "./.docker-data/host_key")),
@@ -38,7 +39,7 @@ func MainServer(database *database.Database, limiter *ratelimiter.Limiter) (*gos
 					if err != nil {
 						host = session.RemoteAddr().String()
 					}
-					return ui.ViewportModel(database, limiter, host), []tea.ProgramOption{
+					return ui.ViewportModel(database, limiter, telegram, host), []tea.ProgramOption{
 						tea.WithAltScreen(),
 					}
 				},
@@ -50,5 +51,3 @@ func MainServer(database *database.Database, limiter *ratelimiter.Limiter) (*gos
 	}
 	return server, nil
 }
-
-// test ci
