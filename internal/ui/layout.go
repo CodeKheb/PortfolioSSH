@@ -85,6 +85,17 @@ func (model Model) footerView() string {
 					labelStyle.Render("Search") + " " +
 					keyStyle.Render("/ ") + "	"
 		}
+		if model.screen == ContactScreen {
+			helper =
+				labelStyle.Render("Next") + " " +
+					keyStyle.Render("Tab") + "    " +
+					labelStyle.Render("Previous") + " " +
+					keyStyle.Render("Shift+Tab") + "    " +
+					labelStyle.Render("Back") + " " +
+					keyStyle.Render("b/Esc") + "    " +
+					labelStyle.Render("Send") + " " +
+					keyStyle.Render("Enter") + "    "
+		}
 	}
 
 	return instructionsStyle.Render(
