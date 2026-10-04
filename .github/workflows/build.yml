@@ -28,15 +28,15 @@ jobs:
       - name: Build image
         run: |
           IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}:${GITHUB_SHA}"
-      
+
           docker build \
             -t "$IMAGE" \
             .
-      
+
       - name: Push image
         run: |
           IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}:${GITHUB_SHA}"
-      
+
           docker push "$IMAGE"
 
       - name: Auth to GCloud
@@ -51,7 +51,7 @@ jobs:
 
       - name: Configure SSH
         run: |
-          mkdir ~/.ssh
+          mkdir -p ~/.ssh
           echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
 
@@ -63,12 +63,28 @@ jobs:
             --local-host-port=localhost:2222 \
             > /tmp/iap.log 2>&1 &
 
+          IAP_PID=$!
+
+          echo "IAP tunnel process: $IAP_PID"
+
           for i in {1..20}; do
-            if nc -z localhost 2222; then
-              break
+            if ! kill -0 "$IAP_PID" 2>/dev/null; then
+              echo "IAP tunnel process exited."
+              cat /tmp/iap.log
+              exit 1
             fi
+
+            if nc -z 127.0.0.1 2222; then
+              echo "IAP tunnel is ready."
+              exit 0
+            fi
+
             sleep 1
           done
+
+          echo "IAP tunnel failed to become ready."
+          cat /tmp/iap.log
+          exit 1
 
       - name: Deploy
         run: |
