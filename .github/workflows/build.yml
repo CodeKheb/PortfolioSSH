@@ -12,6 +12,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      id-token: write
 
     steps:
       - name: Checkout
@@ -38,18 +39,44 @@ jobs:
       
           docker push "$IMAGE"
 
+      - name: Auth to GCloud
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: project-87c218ac-87da-47e7-8c7
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: github-deploy@project-87c218ac-87da-47e7-8c7.iam.gserviceaccount.com
+
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v3
+
       - name: Configure SSH
         run: |
           mkdir ~/.ssh
           echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
 
-          ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
+      - name: Start IAP tunnel
+        run: |
+          gcloud compute start-iap-tunnel portfolio-vm 2222 \
+            --project=project-87c218ac-87da-47e7-8c7 \
+            --zone=us-west1-a \
+            --local-host-port=localhost:2222 \
+            > /tmp/iap.log 2>&1 &
 
-      - name: Deploy 
+          for i in {1..20}; do
+            if nc -z localhost 2222; then
+              break
+            fi
+            sleep 1
+          done
+
+      - name: Deploy
         run: |
           ssh \
-           -i ~/.ssh/deploy_key \
-           "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
-           "cd ~/PortfolioSSH && IMAGE_TAG=${GITHUB_SHA} docker compose pull && \
-            IMAGE_TAG=${GITHUB_SHA} docker compose up -d"
+            -i ~/.ssh/deploy_key \
+            -p 2222 \
+            -o StrictHostKeyChecking=no \
+            "${{ secrets.DEPLOY_USER }}@localhost" \
+            "cd ~/PortfolioSSH && \
+             IMAGE_TAG=${GITHUB_SHA} docker compose pull && \
+             IMAGE_TAG=${GITHUB_SHA} docker compose up -d"
