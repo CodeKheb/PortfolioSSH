@@ -3,8 +3,30 @@
 An overengineered portfolio you visit over **SSH** instead of a browser.
 
 ```bash
-ssh 136.86.187.152 -p 42069
+ssh kherbin.getclingy.download
 ```
+
+## Demo
+
+https://github.com/user-attachments/assets/4b6385e0-600b-4f6c-8339-cf91a182c6fb
+
+## Screenshots
+
+| Menu | About |
+|:---:|:---:|
+| ![Menu screen](docs/screenshots/menu.png) | ![About screen](docs/screenshots/about.png) |
+
+| Projects | Project README |
+|:---:|:---:|
+| ![Projects screen](docs/screenshots/projects.png) | ![Project README view](docs/screenshots/project-readme.png) |
+
+| Contact | Message |
+|:---:|:---:|
+| ![Contact screen](docs/screenshots/contact.png) | ![Message me](docs/screenshots/message.png) |
+
+| Grafana Metrics |
+|:---:|
+| ![Grafana](docs/screenshots/dashboard.png)|
 
 ## How it works
 
@@ -13,7 +35,8 @@ ssh 136.86.187.152 -p 42069
 3. **Screens** — The TUI has five screens rendered with [Lipgloss](https://github.com/charmbracelet/lipgloss) in forced TrueColor: **Menu → About / Projects / Contact**, plus a **README** view per project.
 4. **Live READMEs** — Each project lists a GitHub repo URL. On startup (and re-polled every 5 minutes by a background goroutine), the raw `README.md` of every repo is fetched from `raw.githubusercontent.com`. The markdown is parsed with [Goldmark](https://github.com/yuin/goldmark) (GFM extensions) and converted into styled TUI lines — headings, paragraphs, lists, code blocks, tables, and horizontal rules all render natively in the terminal.
 5. **Search** — Vim-style search on content screens: press `/` to type a query, `n`/`N` to jump between matches, with matches highlighted live as you type.
-6. **Metrics** — Each new session increments a Prometheus counter (`portfolio_ssh_sessions`), exposed on `:8080/metrics`.
+6. **Visitor messaging** — The Contact screen doubles as a message form (name, email, message). Submissions are rate-limited per client IP (in-memory, 5-minute window), persisted to a SQLite database, and fire a Telegram notification — messages reach me without ever exposing an inbox.
+7. **Metrics** — Each new session increments a Prometheus counter (`portfolio_ssh_sessions`), exposed on `:8080/metrics`.
 
 ### Controls
 
@@ -27,6 +50,38 @@ ssh 136.86.187.152 -p 42069
 | `b` / `Esc` | Back |
 | `q` | Quit / disconnect |
 
+## Project structure
+
+```
+PortfolioSSH/
+├── cmd/portfolio/                # Entrypoint — env loading, wiring, background jobs
+├── internal/
+│   ├── ssh/                      # Wish SSH server, session → Bubbletea middleware
+│   ├── ui/                       # Bubbletea model + the five screens
+│   │   ├── model.go              #   root model & state machine
+│   │   ├── menu_view.go          #   main menu
+│   │   ├── about_view.go         #   about screen
+│   │   ├── project_view.go       #   project list
+│   │   ├── readme_view.go        #   live-rendered project README
+│   │   ├── contact_view.go       #   contact + message form
+│   │   ├── input.go              #   text-input handling
+│   │   ├── search.go             #   vim-style search
+│   │   ├── github_fetch.go       #   README polling (every 5 min)
+│   │   └── styles.go / layout.go #   Lipgloss styling & layout
+│   ├── database/                 # SQLite message store (WAL mode)
+│   ├── notifier/                 # Telegram notification on new messages
+│   ├── ratelimiter/              # In-memory per-IP rate limiting
+│   └── metrics/                  # Prometheus counter + /metrics endpoint
+├── docs/screenshots/             # Screenshots used in this README
+├── monitoring/prometheus/        # Prometheus scrape config
+├── nginx/                        # Nginx reverse proxy (Grafana on :80)
+├── terraform/                    # GCP infra — e2-micro VM, firewall
+├── .github/workflows/            # CI/CD — build → GHCR → SSH deploy
+├── Dockerfile                    # Multi-stage build (Go → Alpine, non-root)
+├── docker-compose.yaml           # Production stack (5 services)
+└── docker-local.yaml             # Local dev stack
+```
+
 ## Technology used
 
 | Layer | Technology |
@@ -35,6 +90,8 @@ ssh 136.86.187.152 -p 42069
 | TUI framework | Bubbletea, Bubbles, Lipgloss (Charm stack) |
 | SSH server | Wish + charmbracelet/ssh |
 | Markdown parsing | Goldmark (GitHub Flavored Markdown) |
+| Database | SQLite (`modernc.org/sqlite`, pure Go, WAL mode) |
+| Notifications | Telegram Bot API |
 | Metrics | Prometheus `client_golang` |
 | Containerization | Docker — multi-stage build (Go builder → Alpine runtime), non-root user |
 | Orchestration | Docker Compose |
@@ -51,7 +108,7 @@ ssh 136.86.187.152 -p 42069
    - pushes it to `ghcr.io/codekheb/portfoliossh`,
    - SSHes into the VM and runs `docker compose pull && docker compose up -d` with `IMAGE_TAG` set to that SHA.
 3. **Runtime stack** — The production `docker-compose.yaml` runs five services on a private Docker network:
-   - `portfolio` — the SSH app (only port `42069` is exposed publicly)
+   - `portfolio` — the SSH app (public ports `22` and `42069`, both mapping to the container's `42069`); messages persisted in the `portfolio-data` volume
    - `prometheus` — scrapes the app's metrics (`portfolio:8080`) and node metrics every 15s
    - `grafana` — dashboards over the scraped data
    - `node-exporter` — host-level metrics (root filesystem mounted read-only)
@@ -63,8 +120,13 @@ ssh 136.86.187.152 -p 42069
 |---|---|---|---|
 | `SSH_ADDRESS` | App | Listen address of the SSH server | `:42069` |
 | `SSH_HOST_KEY` | App | Path to the SSH host key | `./.docker-data/host_key` |
+| `DATABASE_PATH` | App | Path to the SQLite messages database | `./messages.db` |
+| `TELEGRAM_BOT_TOKEN` | App | Bot token for message notifications | — (optional) |
+| `TELEGRAM_CHAT_ID` | App | Chat ID to notify on new messages | — (optional) |
 | `IMAGE_TAG` | Compose | Image tag to pull (`GHCR` + commit SHA) | — |
 | `PUBLIC_IP` | Compose | Grafana root URL / domain | — |
+
+A local `.env` file is loaded automatically (godotenv) — handy for the Telegram variables during development.
 
 ## Run locally
 
@@ -80,8 +142,12 @@ ssh localhost -p 42069
 
 The local variant also exposes the monitoring stack directly: Grafana on `:3000`, Prometheus on `:9090`, and the app's metrics endpoint on `:8080`.
 
+Messages submitted via the Contact screen are stored in SQLite. Telegram notifications are optional — set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in a `.env` file to enable them.
+
 ## Metrics
 
 | Metric | Type | Description |
 |---|---|---|
 | `portfolio_ssh_sessions` | Counter | Total number of SSH sessions served |
+| `portfolio_messages_received` | Counter | Total number of succesful messages received |
+| `portfolio_messages_failed` | Counter | Total number of messages failed |
