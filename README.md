@@ -8,7 +8,7 @@ ssh kherbin.getclingy.download
 
 ## Demo
 
-https://github.com/user-attachments/assets/4b6385e0-600b-4f6c-8339-cf91a182c6fb
+https://github.com/user-attachments/assets/75ee04ef-daef-46f4-a128-168d137042eb
 
 ## Screenshots
 
