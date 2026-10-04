@@ -124,7 +124,6 @@ func (model Model) keyHandler(message tea.KeyMsg) (Model, tea.Cmd) {
 
 			default:
 				model.search, cmd = model.search.Update(message)
-				model.viewport.SetContent(model.ProjectView())
 
 				model.searchProjects()
 				return model, cmd
