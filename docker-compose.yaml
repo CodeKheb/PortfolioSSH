@@ -4,6 +4,7 @@ services:
     container_name: portfolio-ssh
     restart: unless-stopped
     ports:
+      - "22:42069"
       - "42069:42069"
     environment:
       SSH_ADDRESS: ":42069"
