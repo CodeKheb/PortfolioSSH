@@ -4,6 +4,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/CodeKheb/PortfolioSSH/internal/metrics"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
@@ -140,6 +141,7 @@ func (model Model) submitMessage() Model {
 		message,
 	)
 	if err != nil {
+		metrics.MessagesFailed.Inc()
 		model.contactError = err.Error()
 		return model
 	}
@@ -148,6 +150,7 @@ func (model Model) submitMessage() Model {
 		log.Printf("Telegram notification failed: %v", err)
 	}
 
+	metrics.MessagesReceived.Inc()
 	model.contactSuccess = true
 	return model
 }
