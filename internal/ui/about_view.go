@@ -132,6 +132,8 @@ func (model Model) aboutLines() []ContentLine {
 		{Text: "    • Terraform", Style: bodyStyle},
 		{Text: "    • GitHub Actions", Style: bodyStyle},
 		{Text: "    • Linux", Style: bodyStyle},
+		{Text: "    • Prometheus", Style: bodyStyle},
+		{Text: "    • Grafana", Style: bodyStyle},
 		{Text: "    • Google Cloud Platform (GCP)", Style: bodyStyle},
 		{Text: "", Style: bodyStyle},
 
@@ -166,6 +168,8 @@ func (model Model) aboutLines() []ContentLine {
 		{Text: "    • React.js", Style: bodyStyle},
 		{Text: "    • Tailwind CSS", Style: bodyStyle},
 		{Text: "    • Alpine.js", Style: bodyStyle},
+		{Text: "    • Dart", Style: bodyStyle},
+		{Text: "    • Flutter", Style: bodyStyle},
 		{Text: "", Style: bodyStyle},
 
 		{Text: "Tools for Development", Style: subheadingStyle},
@@ -188,6 +192,11 @@ func (model Model) aboutLines() []ContentLine {
 		{Text: "April 2026", Style: mutedStyle},
 		{Text: "", Style: bodyStyle},
 		{Text: "", Style: bodyStyle},
+
+		{Text: "IC3 Digital Literacy Certification - Level 2", Style: subheadingStyle},
+		{Text: "October 2026", Style: mutedStyle},
+		{Text: "", Style: bodyStyle},
+
 	}
 }
 

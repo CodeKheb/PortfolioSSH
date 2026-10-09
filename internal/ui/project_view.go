@@ -76,6 +76,7 @@ var projectItems = []Project{
 		Title:      "Clingy",
 		Technology: "TensorFlow, React-Native, Google OAuth2",
 		Description: `
+		RAITE 2026 Hackathon
 		A Clingy reminder to do your tasks. 
 		Your Google Classroom deadlines, turned into a study plan.
 		An Android app that works offline, with a small star called Cling that nudges you. 
