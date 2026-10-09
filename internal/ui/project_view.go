@@ -15,8 +15,8 @@ type Project struct {
 var projectItems = []Project{
 	{
 		Title:       "Portfolio",
-		Technology:  "Go, Terraform, GCP, SSH",
-		Description: "Portfolio larp",
+		Technology:  "Go, Terraform, GCP, SSH, Docker, Prometheus, Grafana",
+		Description: "An overengineered portfolio",
 		RepoURL:     "https://github.com/CodeKheb/PortfolioSSH",
 	},
 	{
@@ -71,6 +71,16 @@ var projectItems = []Project{
 		a Sway (Wayland) desktop, and a set of rofi-powered launcher scripts.
 		`,
 		RepoURL: "https://github.com/CodeKheb/dotfiles",
+	},
+	{
+		Title:      "Clingy",
+		Technology: "TensorFlow, React-Native, Google OAuth2",
+		Description: `
+		A Clingy reminder to do your tasks. 
+		Your Google Classroom deadlines, turned into a study plan.
+		An Android app that works offline, with a small star called Cling that nudges you. 
+		`,
+		RepoURL: "https://github.com/CodeKheb/Clingy",
 	},
 
 	// TODO: ADD MORE PROJECTS
