@@ -4,13 +4,13 @@ variable "project_id" {
 }
 
 variable "region" {
-  type        = string
-  default     = "us-west1"
+  type    = string
+  default = "us-west1"
 }
 
 variable "zone" {
-  type        = string
-  default     = "us-west1-a"
+  type    = string
+  default = "us-west1-a"
 }
 
 variable "vm_name" {

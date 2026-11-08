@@ -30,6 +30,7 @@ resource "google_compute_firewall" "portfolio_public" {
       "22",
       "80",
       "42069",
+      "443",
     ]
   }
 
