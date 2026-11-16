@@ -9,6 +9,7 @@ services:
     environment:
       SSH_ADDRESS: ":42069"
       SSH_HOST_KEY: "/keys/host_key"
+      WEB_ADDRESS: ":8081"
       DATABASE_PATH: "/data/messages.db"
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
@@ -35,8 +36,8 @@ services:
       - prometheus
     restart: unless-stopped
     environment:
-      GF_SERVER_ROOT_URL: "http://${PUBLIC_IP}/"
-      GF_SERVER_DOMAIN: "${PUBLIC_IP}"
+      GF_SERVER_ROOT_URL: "https://grafana.getclingy.download"
+      GF_SERVER_DOMAIN: "grafana.getclingy.download"
       GF_SERVER_PROTOCOL: "http"
 
   node-exporter:
