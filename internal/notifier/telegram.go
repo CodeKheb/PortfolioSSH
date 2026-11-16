@@ -36,7 +36,7 @@ func (tele *Telegram) SendMessage(name, email, message string) error {
 
 	body, err := json.Marshal(payload)
 	if err != nil {
-		return nil
+		return fmt.Errorf("%w", err)
 	}
 
 	endpoint := fmt.Sprintf(
