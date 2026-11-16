@@ -13,6 +13,7 @@ import (
 	"github.com/CodeKheb/PortfolioSSH/internal/ratelimiter"
 	sshserver "github.com/CodeKheb/PortfolioSSH/internal/ssh"
 	"github.com/CodeKheb/PortfolioSSH/internal/ui"
+	webserver "github.com/CodeKheb/PortfolioSSH/internal/web"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/joho/godotenv"
 	"github.com/muesli/termenv"
@@ -41,13 +42,6 @@ func main() {
 
 	go ui.PollREADME(5 * time.Minute)
 
-	go func() {
-		log.Println("Starting metrics server on :8080")
-		if err := metrics.Start(":8080"); err != nil {
-			log.Fatal("metrics server %w", err)
-		}
-	}()
-
 	limiter := ratelimiter.New(5 * time.Minute)
 
 	telegramToken := strings.TrimSpace(os.Getenv("TELEGRAM_BOT_TOKEN"))
@@ -58,14 +52,37 @@ func main() {
 		telegramChatID,
 	)
 
-	server, err := sshserver.MainServer(db, limiter, telegram)
+	// Metrics Server
+	go func() {
+		log.Println("Starting metrics server on :8080")
+		if err := metrics.Start(":8080"); err != nil {
+			log.Fatal("metrics server %w", err)
+		}
+	}()
+
+	// Web Server
+	webAddress := os.Getenv("WEB_ADDRESS")
+	if webAddress == "" {
+		webAddress = ":8081"
+	}
+
+	web := webserver.NewServer(db, limiter, telegram)
+
+	go func() {
+		if err := web.Start(webAddress); err != nil {
+			log.Println("Starting web server on :8081")
+		}
+	}()
+
+	// SSH Server
+	ssh, err := sshserver.MainServer(db, limiter, telegram)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	fmt.Print("CONNECTED!!")
 
-	if err := server.ListenAndServe(); err != nil {
+	if err := ssh.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}
 }
