@@ -80,7 +80,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Print("CONNECTED!!")
+	fmt.Println("CONNECTED!!")
 
 	if err := ssh.ListenAndServe(); err != nil {
 		log.Fatal(err)

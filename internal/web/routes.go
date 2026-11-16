@@ -11,5 +11,6 @@ func (s *Server) routes() http.Handler {
 		w.Write([]byte("ok"))
 	})
 
+	mux.HandleFunc("POST /api/v1/contact", s.handleContact)
 	return mux
 }

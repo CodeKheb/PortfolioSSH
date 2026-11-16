@@ -5,25 +5,28 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 type Telegram struct {
 	token  string
 	chatID string
+	client *http.Client
 }
 
 func NewTelegram(token, chatID string) *Telegram {
 	return &Telegram{
 		token:  token,
 		chatID: chatID,
+		client: &http.Client{
+			Timeout: 5 * time.Second,
+		},
 	}
 }
 
 func (tele *Telegram) SendMessage(name, email, message string) error {
 	text := fmt.Sprintf(
-		"Name: %s\n"+
-			"Email: %s\n"+
-			"%s",
+		"Name: %s\nEmail: %s\n%s",
 		name,
 		email,
 		message,
