@@ -1,111 +1,79 @@
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+/*
+ * Terminal stylesheet for the browser port of the SSH portfolio.
+ *
+ * Mirrors the Lipgloss palette from internal/ui/styles.go:
+ *   BLUE #2D7DFF  PURPLE #7D56F4  GREEN #73DACA  RED #F7768E
+ *   WHITE #FFFFFF CREAM #FFFDF5   TEXT #C0CAF5   MUTED #A9B1D6
+ *   DIM #565F89   DARK #1A1B26    LAVENDER #BB9AF7
+ */
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* no horizontal / vertical page overflow */
+  background: #1A1B26; /* DARK - terminal background */
+  color: #FFFFFF; /* WHITE - default terminal foreground */
+  font-family: ui-monospace, Menlo, Monaco, 'Cascadia Code', 'Fira Code',
+    'Consolas', 'Liberation Mono', monospace;
+  font-size: 22px;
+  line-height: 1.3;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+  -webkit-tap-highlight-color: transparent;
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
 }
 
-body {
-  margin: 0;
+.terminal-content {
+  outline: none;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+/* Live search highlight (searchHighlightStyle: blue bg, white text, bold). */
+mark {
+  background: #2D7DFF;
+  color: #FFFFFF;
+  font-weight: bold;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+/* Form inputs: transparent terminal-style fields. */
+input,
+textarea {
+  caret-color: #FFFFFF;
+}
+
+::placeholder {
+  color: #A9B1D6; /* MUTED */
+  opacity: 1;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #A9B1D6;
+}
+
+/* Ensure long, unbreakable terminal lines (e.g. table/rules) stay in bounds. */
+.terminal-content .term-line {
+  overflow-wrap: break-word;
+}
+
+/* Mobile: tighter spacing and a slightly smaller font. */
+@media (max-width: 640px) {
+  html {
+    font-size: 13px;
   }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
+  .terminal-content {
+    padding: 0.75rem 1rem;
   }
-}
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+  /* Hide help footer on mobile to save space */
+  footer {
+    display: none;
+  }
 }
