@@ -15,6 +15,7 @@ import { MenuView } from './MenuView'
 import { AboutView } from './AboutView'
 import { ProjectsView } from './ProjectsView'
 import { ContactView } from './ContactView'
+import { SshView } from './SshView'
 import { type ContentLine } from '../theme'
 
 // One text line per arrow-key press.
@@ -24,7 +25,7 @@ const WHEEL_STEP = 40
 // Minimum time between two wheel-driven selection moves (ms).
 const WHEEL_LOCK = 160
 
-type ViewScreen = 'menu' | 'about' | 'projects' | 'contact'
+type ViewScreen = 'menu' | 'about' | 'projects' | 'contact' | 'ssh'
 
 export function Terminal() {
   const [screen, setScreen] = useState<ViewScreen>('menu')
@@ -40,6 +41,7 @@ export function Terminal() {
     about: null,
     projects: null,
     contact: null,
+    ssh: null,
   })
   // Getter for the currently mounted content view's searchable lines.
   const searchableGetterRef = useRef<(() => readonly ContentLine[]) | null>(null)
@@ -113,6 +115,10 @@ export function Terminal() {
         case 2:
           setSelected(0)
           setScreen('contact')
+          break
+        case 3:
+          setSelected(0)
+          setScreen('ssh')
           break
       }
     },
@@ -255,7 +261,7 @@ export function Terminal() {
             setSelected((s) => clampSelected(s - 1, MENU_ENTRIES.length - 1))
           } else if (screen === 'projects') {
             setSelected((s) => clampSelected(s - 1, PROJECTS.length - 1))
-          } else if (screen === 'about') {
+          } else if (screen === 'about' || screen === 'ssh') {
             scrollByLines(-1)
           }
           break
@@ -267,7 +273,7 @@ export function Terminal() {
             setSelected((s) => clampSelected(s + 1, MENU_ENTRIES.length - 1))
           } else if (screen === 'projects') {
             setSelected((s) => clampSelected(s + 1, PROJECTS.length - 1))
-          } else if (screen === 'about') {
+          } else if (screen === 'about' || screen === 'ssh') {
             scrollByLines(1)
           }
           break
@@ -448,6 +454,16 @@ export function Terminal() {
           style={contentStyle}
         >
           <ProjectsView selected={selected} query={query} onSelect={setSelected} />
+        </div>
+      )}
+      {screen === 'ssh' && (
+        <div
+          ref={(el) => {
+            contentRefs.current.ssh = el
+          }}
+          style={contentStyle}
+        >
+          <SshView />
         </div>
       )}
       {screen === 'contact' && (

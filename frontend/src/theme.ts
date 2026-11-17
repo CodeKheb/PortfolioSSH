@@ -21,9 +21,22 @@ export const theme = {
 } as const
 
 // Terminal screen identifiers, mirroring the Screen iota in internal/ui/model.go
-export type Screen = 'menu' | 'about' | 'projects' | 'readme' | 'contact'
+export type Screen =
+  | 'menu'
+  | 'about'
+  | 'projects'
+  | 'readme'
+  | 'contact'
+  | 'ssh'
 
-export const SCREENS: Screen[] = ['menu', 'about', 'projects', 'readme', 'contact']
+export const SCREENS: Screen[] = [
+  'menu',
+  'about',
+  'projects',
+  'ssh',
+  'readme',
+  'contact',
+]
 
 // Named line styles. Each maps to the equivalent Lipgloss style in styles.go.
 export type LineStyle =

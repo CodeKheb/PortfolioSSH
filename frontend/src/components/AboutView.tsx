@@ -25,7 +25,7 @@ export function AboutView({ query, registerSearchables }: AboutViewProps) {
   }, [registerSearchables, getSearchableLines])
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+    <div className="about-view" style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
       <div
         style={{
           maxWidth: '80ch',

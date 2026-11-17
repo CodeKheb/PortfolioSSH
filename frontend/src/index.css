@@ -64,8 +64,23 @@ textarea::placeholder {
   overflow-wrap: break-word;
 }
 
+/* Long-form views (About, PortfolioSSH) shrink on smaller screens so their
+   lines fit without constant wrapping. */
+@media (max-width: 900px) {
+  .about-view,
+  .ssh-view {
+    font-size: 0.9em;
+  }
+}
+
 /* Mobile: tighter spacing and a slightly smaller font. */
 @media (max-width: 640px) {
+  .about-view,
+  .ssh-view {
+    font-size: 0.85em;
+    line-height: 1.25;
+  }
+
   html {
     font-size: 13px;
   }

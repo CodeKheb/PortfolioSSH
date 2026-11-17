@@ -10,7 +10,7 @@ import { SearchInput } from './SearchInput'
 type FooterItem = { label: string; key: string }
 
 interface FooterProps {
-  screen: 'menu' | 'about' | 'projects' | 'contact'
+  screen: 'menu' | 'about' | 'projects' | 'contact' | 'ssh'
   searching: boolean
   showFooter: boolean
   query: string
@@ -35,6 +35,11 @@ const HINTS: Record<string, FooterItem[]> = {
     { label: 'Open GitHub', key: 'Enter/Click' },
     { label: 'Back', key: 'b/Esc' },
     { label: 'Search', key: '/' },
+  ],
+  ssh: [
+    { label: 'Navigate', key: '↑/↓ j/k/Wheel' },
+    { label: 'Scroll', key: 'Ctrl+D/U' },
+    { label: 'Back', key: 'b/Esc' },
   ],
   contact: [
     { label: 'Next', key: 'Tab' },

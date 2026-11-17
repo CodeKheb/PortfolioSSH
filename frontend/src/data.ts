@@ -13,6 +13,7 @@ export const MENU_ENTRIES: readonly { title: string; description: string }[] = [
   { title: 'About', description: 'Hi lol' },
   { title: 'Projects', description: 'What I larp about' },
   { title: 'Contact', description: 'Send me a message' },
+  { title: 'PortfolioSSH', description: 'How to SSH in' },
 ]
 
 export const PROJECTS: readonly Project[] = [
@@ -265,7 +266,10 @@ export const ABOUT_LINES: readonly ContentLine[] = [
 ]
 
 // Header titles per screen, ported from the WindowSizeMsg handler in model.go
-export function headerTitle(screen: 'menu' | 'about' | 'projects' | 'readme' | 'contact', projectTitle?: string): string {
+export function headerTitle(
+  screen: 'menu' | 'about' | 'projects' | 'readme' | 'contact' | 'ssh',
+  projectTitle?: string,
+): string {
   switch (screen) {
     case 'menu':
       return "Kherbin's Portfolio"
@@ -277,6 +281,8 @@ export function headerTitle(screen: 'menu' | 'about' | 'projects' | 'readme' | '
       return projectTitle ? `PROJECT: ${projectTitle}` : 'PROJECT'
     case 'contact':
       return 'CONTACT'
+    case 'ssh':
+      return 'PORTFOLIO SSH'
     default:
       return "Kherbin's Portfolio"
   }
