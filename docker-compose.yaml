@@ -50,7 +50,10 @@ services:
       - "/:/host:ro,rslave"
 
   nginx:
-    image: nginx:alpine
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    image: ghcr.io/codekheb/portfolio-nginx:${IMAGE_TAG}
     container_name: nginx
     ports:
       - "80:80"
@@ -59,6 +62,7 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/certs:/etc/nginx/certs:ro
     depends_on:
+      - portfolio
       - grafana
     restart: unless-stopped
 
