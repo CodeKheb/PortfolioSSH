@@ -8,3 +8,6 @@ terraform/
 .env.*
 host_key
 host_key.pub
+nginx/certs
+**/node_modules
+frontend/dist
