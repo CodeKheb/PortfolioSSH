@@ -1,6 +1,6 @@
 services:
   portfolio:
-    image: ghcr.io/codekheb/portfoliossh:${IMAGE_TAG}
+    image: ghcr.io/codekheb/portfoliossh:${PORTFOLIO_TAG}
     container_name: portfolio-ssh
     restart: unless-stopped
     ports:
@@ -53,7 +53,7 @@ services:
     build:
       context: .
       dockerfile: nginx/Dockerfile
-    image: ghcr.io/codekheb/portfolio-nginx:${IMAGE_TAG}
+    image: ghcr.io/codekheb/portfolio-nginx:${NGINX_TAG}
     container_name: nginx
     ports:
       - "80:80"
