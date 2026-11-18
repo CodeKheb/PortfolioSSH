@@ -61,6 +61,7 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/certs:/etc/nginx/certs:ro
+      - ./letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - portfolio
       - grafana

@@ -6,6 +6,8 @@ An overengineered portfolio you visit over **SSH** instead of a browser.
 ssh kherbin.getclingy.download
 ```
 
+A browser build of the same terminal UI lives in [`frontend/`](frontend) for anyone who can't — or doesn't want to — open a terminal.
+
 ## Demo
 
 https://github.com/user-attachments/assets/75ee04ef-daef-46f4-a128-168d137042eb
@@ -38,23 +40,37 @@ https://github.com/user-attachments/assets/75ee04ef-daef-46f4-a128-168d137042eb
 6. **Visitor messaging** — The Contact screen doubles as a message form (name, email, message). Submissions are rate-limited per client IP (in-memory, 5-minute window), persisted to a SQLite database, and fire a Telegram notification — messages reach me without ever exposing an inbox.
 7. **Metrics** — Each new session increments a Prometheus counter (`portfolio_ssh_sessions`), exposed on `:8080/metrics`.
 
+### Browser frontend
+
+`frontend/` is a React + TypeScript + Vite port of the TUI. It keeps the same palette, monospace layout and keyboard controls, and adds pointer support:
+
+- **Fourth menu entry** — `PortfolioSSH` walks through installing an SSH client on Windows/macOS/Linux, connecting to `kherbin.getclingy.download`, and saving the server host key to `known_hosts`.
+- **Copyable commands** — the PortfolioSSH guide is a numbered terminal.shop-style script; click any command to copy it.
+- **Wheel navigation** — in the menu and projects screens the wheel moves the selection one entry at a time; About and PortfolioSSH scroll normally.
+- **Mouse** — hovering a menu entry or project selects it, clicking an entry acts like `Enter`, and clicking outside the entries activates the current selection.
+- **Enter on projects** — opens the selected project's GitHub repository.
+- **Responsive** — the About and PortfolioSSH text scales down on smaller screens.
+
 ### Controls
 
 | Key | Action |
 |---|---|
 | `↑/↓` or `j/k` | Navigate / scroll |
-| `Enter` | Select (menu item / project) |
+| `Enter` | Select (menu item / project); in the browser build, open the selected project's repo |
 | `Ctrl+D` / `Ctrl+U` | Half-page scroll down / up |
 | `/` | Search (then `n` / `N` for next / previous match) |
 | `?` | Toggle help footer |
 | `b` / `Esc` | Back |
-| `q` | Quit / disconnect |
+| `q` | Quit / disconnect (a no-op in the browser build) |
+| Wheel | Browser build: move the selection in the menu and projects screens |
+| Click | Browser build: act like `Enter`; copy a command in the PortfolioSSH guide |
 
 ## Project structure
 
 ```
 PortfolioSSH/
 ├── cmd/portfolio/                # Entrypoint — env loading, wiring, background jobs
+├── frontend/                     # React + Vite browser port of the TUI
 ├── internal/
 │   ├── ssh/                      # Wish SSH server, session → Bubbletea middleware
 │   ├── ui/                       # Bubbletea model + the five screens
@@ -87,6 +103,7 @@ PortfolioSSH/
 | Layer | Technology |
 |---|---|
 | Language | Go 1.27 |
+| Browser frontend | React 19, TypeScript, Vite |
 | TUI framework | Bubbletea, Bubbles, Lipgloss (Charm stack) |
 | SSH server | Wish + charmbracelet/ssh |
 | Markdown parsing | Goldmark (GitHub Flavored Markdown) |
@@ -123,6 +140,7 @@ PortfolioSSH/
 | `DATABASE_PATH` | App | Path to the SQLite messages database | `./messages.db` |
 | `TELEGRAM_BOT_TOKEN` | App | Bot token for message notifications | — (optional) |
 | `TELEGRAM_CHAT_ID` | App | Chat ID to notify on new messages | — (optional) |
+| `WEB_ADDRESS` | App | Listen address of the web API (browser frontend) | `:8081` |
 | `IMAGE_TAG` | Compose | Image tag to pull (`GHCR` + commit SHA) | — |
 | `PUBLIC_IP` | Compose | Grafana root URL / domain | — |
 
@@ -143,6 +161,23 @@ ssh localhost -p 42069
 The local variant also exposes the monitoring stack directly: Grafana on `:3000`, Prometheus on `:9090`, and the app's metrics endpoint on `:8080`.
 
 Messages submitted via the Contact screen are stored in SQLite. Telegram notifications are optional — set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in a `.env` file to enable them.
+
+### Running the browser frontend
+
+The Go web API listens on `:8081` (`WEB_ADDRESS`), and the Vite dev server proxies `/api` to it:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Build the static bundle with:
+
+```bash
+cd frontend
+npm run build
+```
 
 ## Metrics
 
