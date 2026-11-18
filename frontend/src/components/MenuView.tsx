@@ -8,6 +8,11 @@
 
 import { MENU_ENTRIES } from '../data'
 import { Line } from './Line'
+
+// Only select on hover where the pointer can actually hover; on touch screens a
+// tap would otherwise re-lay-out the menu before the click lands.
+const CAN_HOVER =
+  typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches
 import { type ContentLine } from '../theme'
 
 interface MenuViewProps {
@@ -39,7 +44,7 @@ export function MenuView({
               e.stopPropagation()
               onActivateEntry(i)
             }}
-            onMouseEnter={() => onHighlightEntry(i)}
+            onMouseEnter={CAN_HOVER ? () => onHighlightEntry(i) : undefined}
             style={{
               cursor: 'pointer',
               WebkitTapHighlightColor: 'transparent',

@@ -32,8 +32,30 @@ body,
   flex-direction: column;
 }
 
+/*
+ * Terminal shell. On larger screens the app owns the viewport and each view
+ * scrolls inside its own flex child; on phones the document scrolls instead
+ * (see the mobile rules at the bottom), which is the only touch scrolling
+ * behaviour that is reliable across mobile browsers.
+ */
+.terminal {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+}
+
 .terminal-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1rem 1.5rem;
+  box-sizing: border-box;
   outline: none;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 /* Live search highlight (searchHighlightStyle: blue bg, white text, bold). */
@@ -73,7 +95,7 @@ textarea::placeholder {
   }
 }
 
-/* Mobile: tighter spacing and a slightly smaller font. */
+/* Mobile: tighter spacing, smaller long-form text, and document scrolling. */
 @media (max-width: 640px) {
   .about-view,
   .ssh-view {
@@ -84,9 +106,33 @@ textarea::placeholder {
   html {
     font-size: 13px;
   }
-  .terminal-content {
-    padding: 0.75rem 1rem;
+
+  /* Let the page scroll normally: the browser's native touch scrolling (finger
+     tracking + momentum) is far more reliable than a nested scroll container. */
+  html,
+  body,
+  #root {
+    height: auto;
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
+
+  .terminal {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+
+  .terminal-content {
+    flex: none;
+    min-height: auto;
+    overflow: visible;
+    padding: 0.75rem 1rem;
+    touch-action: auto;
+    overscroll-behavior: auto;
+  }
+
   /* Hide help footer on mobile to save space */
   footer {
     display: none;

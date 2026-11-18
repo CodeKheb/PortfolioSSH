@@ -7,6 +7,11 @@ import { PROJECTS } from '../data'
 import { Line } from './Line'
 import { type ContentLine } from '../theme'
 
+// Hover-selection only on devices with a real pointer; on touch screens it
+// would shift the layout between touchstart and click.
+const CAN_HOVER =
+  typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches
+
 interface ProjectsViewProps {
   selected: number
   query: string
@@ -38,7 +43,7 @@ export function ProjectsView({ selected, query, onSelect }: ProjectsViewProps) {
         return (
           <div
             key={project.title}
-            onMouseEnter={() => onSelect(i)}
+            onMouseEnter={CAN_HOVER ? () => onSelect(i) : undefined}
             style={{
               marginBottom: '1.5rem',
               alignSelf: 'flex-start',
