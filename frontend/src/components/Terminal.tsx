@@ -50,6 +50,9 @@ export function Terminal() {
   // Accumulated wheel travel / cooldown for wheel navigation.
   const wheelAccumRef = useRef(0)
   const wheelLockRef = useRef(0)
+  // Touch gesture start / one-move-per-swipe lock for touch navigation.
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null)
+  const touchLockRef = useRef(false)
 
   const registerSearchables = useCallback(
     (getter: () => readonly ContentLine[]) => {
@@ -375,6 +378,60 @@ export function Terminal() {
     return () => window.removeEventListener('wheel', onWheel)
   }, [screen, clampSelected])
 
+  // Touch navigation: on the menu and projects screens a vertical swipe moves
+  // the selection one entry per gesture (the mobile equivalent of the wheel).
+  useEffect(() => {
+    if (screen !== 'menu' && screen !== 'projects') return
+
+    const el = contentRefs.current[screen]
+    if (!el) return
+
+    const onTouchStart = (e: TouchEvent) => {
+      touchLockRef.current = false
+      touchStartRef.current =
+        e.touches.length === 1
+          ? { x: e.touches[0].clientX, y: e.touches[0].clientY }
+          : null
+    }
+
+    const onTouchMove = (e: TouchEvent) => {
+      const start = touchStartRef.current
+      if (!start || e.touches.length !== 1) return
+
+      const dy = e.touches[0].clientY - start.y
+      const dx = e.touches[0].clientX - start.x
+      if (Math.abs(dy) < 40 || Math.abs(dy) <= Math.abs(dx)) return
+
+      // The gesture belongs to selection, not page/content scrolling.
+      e.preventDefault()
+      if (touchLockRef.current) return
+      touchLockRef.current = true
+
+      const dir = dy < 0 ? 1 : -1
+      if (screen === 'menu') {
+        setSelected((s) => clampSelected(s + dir, MENU_ENTRIES.length - 1))
+      } else {
+        setSelected((s) => clampSelected(s + dir, PROJECTS.length - 1))
+      }
+    }
+
+    const onTouchEnd = () => {
+      touchStartRef.current = null
+      touchLockRef.current = false
+    }
+
+    el.addEventListener('touchstart', onTouchStart, { passive: true })
+    el.addEventListener('touchmove', onTouchMove, { passive: false })
+    el.addEventListener('touchend', onTouchEnd, { passive: true })
+    el.addEventListener('touchcancel', onTouchEnd, { passive: true })
+    return () => {
+      el.removeEventListener('touchstart', onTouchStart)
+      el.removeEventListener('touchmove', onTouchMove)
+      el.removeEventListener('touchend', onTouchEnd)
+      el.removeEventListener('touchcancel', onTouchEnd)
+    }
+  }, [screen, clampSelected])
+
   // Recompute matches and jump to the first one as the user types, mirroring
   // searchContent() / searchProjects() in internal/ui/search.go.
   useEffect(() => {
@@ -402,6 +459,10 @@ export function Terminal() {
     overflowX: 'hidden',
     padding: '1rem 1.5rem',
     boxSizing: 'border-box',
+    // Native vertical touch scrolling inside each view (with momentum on iOS).
+    touchAction: 'pan-y',
+    WebkitOverflowScrolling: 'touch',
+    overscrollBehavior: 'contain',
   }
 
   return (
