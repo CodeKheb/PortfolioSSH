@@ -28,6 +28,7 @@ export function Header({ screen, projectTitle, onBack }: HeaderProps) {
         alignItems: 'center',
         justifyContent: 'space-between',
         gap: '1rem',
+        flexShrink: 0,
       }}
     >
       <span

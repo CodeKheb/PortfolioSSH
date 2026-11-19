@@ -20,6 +20,10 @@ interface ProjectsViewProps {
 
 export function ProjectsView({ selected, query, onSelect }: ProjectsViewProps) {
   const handleProjectClick = (index: number) => {
+    if (index !== selected) {
+      onSelect(index)
+      return
+    }
     const project = PROJECTS[index]
     if (project.repoURL) {
       window.open(project.repoURL, '_blank', 'noopener,noreferrer')
@@ -43,6 +47,7 @@ export function ProjectsView({ selected, query, onSelect }: ProjectsViewProps) {
         return (
           <div
             key={project.title}
+            data-proj={i}
             onMouseEnter={CAN_HOVER ? () => onSelect(i) : undefined}
             style={{
               marginBottom: '1.5rem',
@@ -52,7 +57,6 @@ export function ProjectsView({ selected, query, onSelect }: ProjectsViewProps) {
             }}
           >
             <div
-              data-proj={i}
               onClick={(e) => {
                 e.stopPropagation()
                 handleProjectClick(i)

@@ -24,6 +24,10 @@ const SCROLL_STEP = 36
 const WHEEL_STEP = 40
 // Minimum time between two wheel-driven selection moves (ms).
 const WHEEL_LOCK = 160
+// Touch travel (in px) needed before the selection moves to the next entry.
+const TOUCH_STEP = 36
+// Minimum time between two touch-driven selection moves (ms).
+const TOUCH_LOCK = 140
 
 type ViewScreen = 'menu' | 'about' | 'projects' | 'contact' | 'ssh'
 
@@ -50,6 +54,14 @@ export function Terminal() {
   // Accumulated wheel travel / cooldown for wheel navigation.
   const wheelAccumRef = useRef(0)
   const wheelLockRef = useRef(0)
+
+  // Touch gesture tracking for continuous selection navigation.
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null)
+  const touchLastYRef = useRef(0)
+  const touchAccumRef = useRef(0)
+  const touchLockRef = useRef(0)
+  const isDraggingRef = useRef(false)
+  const suppressClickRef = useRef(false)
 
 
   const registerSearchables = useCallback(
@@ -376,6 +388,93 @@ export function Terminal() {
     return () => window.removeEventListener('wheel', onWheel)
   }, [screen, clampSelected])
 
+  // Continuous touch navigation: in the menu and projects screens a vertical
+  // drag/swipe moves the selection continuously (one entry per gesture step),
+  // mirroring mouse wheel and keyboard navigation.
+  useEffect(() => {
+    if (screen !== 'menu' && screen !== 'projects') return
+
+    const el = contentRefs.current[screen]
+    if (!el) return
+
+    const onTouchStart = (e: TouchEvent) => {
+      if (e.touches.length !== 1) return
+      const t = e.touches[0]
+      touchStartRef.current = { x: t.clientX, y: t.clientY }
+      touchLastYRef.current = t.clientY
+      touchAccumRef.current = 0
+      isDraggingRef.current = false
+    }
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (!touchStartRef.current || e.touches.length !== 1) return
+      const t = e.touches[0]
+      const totalDx = t.clientX - touchStartRef.current.x
+      const totalDy = t.clientY - touchStartRef.current.y
+
+      if (!isDraggingRef.current) {
+        if (Math.abs(totalDy) > 8 || Math.abs(totalDx) > 8) {
+          if (Math.abs(totalDy) >= Math.abs(totalDx)) {
+            isDraggingRef.current = true
+          }
+        }
+      }
+
+      if (!isDraggingRef.current) return
+
+      if (e.cancelable) {
+        e.preventDefault()
+      }
+
+      // Natural vertical swipe: dragging finger UP (decreasing clientY)
+      // advances selection DOWN (+1). Dragging finger DOWN advances UP (-1).
+      const dy = touchLastYRef.current - t.clientY
+      touchLastYRef.current = t.clientY
+
+      if (touchAccumRef.current !== 0 && Math.sign(touchAccumRef.current) !== Math.sign(dy)) {
+        touchAccumRef.current = 0
+      }
+      touchAccumRef.current += dy
+
+      const now = performance.now()
+      if (Math.abs(touchAccumRef.current) >= TOUCH_STEP && now >= touchLockRef.current) {
+        const dir = touchAccumRef.current > 0 ? 1 : -1
+        touchAccumRef.current = 0
+        touchLockRef.current = now + TOUCH_LOCK
+
+        if (screen === 'menu') {
+          setSelected((s) => clampSelected(s + dir, MENU_ENTRIES.length - 1))
+        } else {
+          setSelected((s) => clampSelected(s + dir, PROJECTS.length - 1))
+        }
+      }
+    }
+
+    const onTouchEnd = () => {
+      if (isDraggingRef.current) {
+        suppressClickRef.current = true
+        window.setTimeout(() => {
+          suppressClickRef.current = false
+        }, 120)
+      }
+      touchStartRef.current = null
+      isDraggingRef.current = false
+      touchAccumRef.current = 0
+    }
+
+    el.addEventListener('touchstart', onTouchStart, { passive: true })
+    el.addEventListener('touchmove', onTouchMove, { passive: false })
+    el.addEventListener('touchend', onTouchEnd, { passive: true })
+    el.addEventListener('touchcancel', onTouchEnd, { passive: true })
+
+    return () => {
+      el.removeEventListener('touchstart', onTouchStart)
+      el.removeEventListener('touchmove', onTouchMove)
+      el.removeEventListener('touchend', onTouchEnd)
+      el.removeEventListener('touchcancel', onTouchEnd)
+    }
+  }, [screen, clampSelected])
+
   // Recompute matches and jump to the first one as the user types, mirroring
   // searchContent() / searchProjects() in internal/ui/search.go.
   useEffect(() => {
@@ -392,11 +491,12 @@ export function Terminal() {
     return () => cancelAnimationFrame(raf)
   }, [searching, query, screen, getSearchableLines, findMatches, scrollToLine, gotoTop])
 
-  // On phones the document itself scrolls (see the mobile rules in
-  // index.css), so each screen starts at the top.
+  // Reset scroll position to top whenever changing screens.
   useEffect(() => {
-    if (window.matchMedia('(max-width: 640px)').matches) {
-      window.scrollTo(0, 0)
+    window.scrollTo(0, 0)
+    const el = contentRefs.current[screen]
+    if (el) {
+      el.scrollTop = 0
     }
   }, [screen])
 
@@ -409,8 +509,14 @@ export function Terminal() {
           ref={(el) => {
             contentRefs.current.menu = el
           }}
+          onClickCapture={(e) => {
+            if (suppressClickRef.current) {
+              e.stopPropagation()
+              e.preventDefault()
+            }
+          }}
           onClick={selectEntry}
-          className="terminal-content"
+          className="terminal-content selection-mode"
         >
           <MenuView
             selected={selected}
@@ -437,8 +543,14 @@ export function Terminal() {
           ref={(el) => {
             contentRefs.current.projects = el
           }}
+          onClickCapture={(e) => {
+            if (suppressClickRef.current) {
+              e.stopPropagation()
+              e.preventDefault()
+            }
+          }}
           onClick={selectEntry}
-          className="terminal-content"
+          className="terminal-content selection-mode"
         >
           <ProjectsView selected={selected} query={query} onSelect={setSelected} />
         </div>

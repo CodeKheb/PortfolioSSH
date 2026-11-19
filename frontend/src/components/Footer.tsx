@@ -79,7 +79,7 @@ export function Footer({
   const items = [...HINTS[screen], { label: '? Help', key: '' }]
 
   return (
-    <footer style={{ color: '#565F89', padding: '1rem 1.5rem', boxSizing: 'border-box' }}>
+    <footer style={{ color: '#565F89', padding: '1rem 1.5rem', boxSizing: 'border-box', flexShrink: 0 }}>
       {items.map((item, i) => (
         <span key={i} style={{ whiteSpace: 'nowrap' }}>
           <span style={{ color: '#A9B1D6' }}>{item.label}</span>{' '}

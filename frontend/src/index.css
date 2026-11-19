@@ -58,6 +58,14 @@ body,
   overscroll-behavior: contain;
 }
 
+/* On selection-driven screens (Menu and Projects), swipe gestures control
+   item selection rather than native document scrolling. */
+.terminal-content.selection-mode {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 /* Live search highlight (searchHighlightStyle: blue bg, white text, bold). */
 mark {
   background: #2D7DFF;
@@ -95,7 +103,7 @@ textarea::placeholder {
   }
 }
 
-/* Mobile: tighter spacing, smaller long-form text, and document scrolling. */
+/* Mobile: tighter spacing, smaller font, and compact terminal viewport. */
 @media (max-width: 640px) {
   .about-view,
   .ssh-view {
@@ -107,30 +115,13 @@ textarea::placeholder {
     font-size: 13px;
   }
 
-  /* Let the page scroll normally: the browser's native touch scrolling (finger
-     tracking + momentum) is far more reliable than a nested scroll container. */
-  html,
-  body,
-  #root {
-    height: auto;
-    min-height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-
   .terminal {
-    height: auto;
-    min-height: 100dvh;
-    overflow: visible;
+    height: 100dvh;
+    overflow: hidden;
   }
 
   .terminal-content {
-    flex: none;
-    min-height: auto;
-    overflow: visible;
     padding: 0.75rem 1rem;
-    touch-action: auto;
-    overscroll-behavior: auto;
   }
 
   /* Hide help footer on mobile to save space */
