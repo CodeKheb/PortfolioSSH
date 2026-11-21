@@ -110,4 +110,4 @@ jobs:
             "${{ secrets.DEPLOY_USER }}@localhost" \
             "cd ~/PortfolioSSH && \
             PORTFOLIO_TAG=${GITHUB_SHA} NGINX_TAG=${GITHUB_SHA} docker compose pull && \
-            PORTFOLIO_TAG=${GITHUB_SHA} NGINX_TAG=${GITHUB_SHA} docker compose up -d
+            PORTFOLIO_TAG=${GITHUB_SHA} NGINX_TAG=${GITHUB_SHA} docker compose up -d"
